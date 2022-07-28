@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/AndroidStudioProjects/Sudoku/app/src/main/res/drawable/border.xml" value="0.124" />
+        <entry key="..\:/AndroidStudioProjects/Sudoku/app/src/main/res/drawable/d.xml" value="0.1575" />
+        <entry key="..\:/AndroidStudioProjects/Sudoku/app/src/main/res/drawable/dl.xml" value="0.1575" />
+        <entry key="..\:/AndroidStudioProjects/Sudoku/app/src/main/res/drawable/dr.xml" value="0.1575" />
+        <entry key="..\:/AndroidStudioProjects/Sudoku/app/src/main/res/drawable/even.xml" value="0.1575" />
+        <entry key="..\:/AndroidStudioProjects/Sudoku/app/src/main/res/drawable/from1to3.xml" value="0.1575" />
+        <entry key="..\:/AndroidStudioProjects/Sudoku/app/src/main/res/drawable/from1to3base.xml" value="0.1575" />
+        <entry key="..\:/AndroidStudioProjects/Sudoku/app/src/main/res/drawable/from1to3near_selected.xml" value="0.1575" />
+        <entry key="..\:/AndroidStudioProjects/Sudoku/app/src/main/res/drawable/from1to3selected.xml" value="0.1575" />
+        <entry key="..\:/AndroidStudioProjects/Sudoku/app/src/main/res/drawable/from1to3wrong.xml" value="0.1575" />
+        <entry key="..\:/AndroidStudioProjects/Sudoku/app/src/main/res/drawable/from4to6.xml" value="0.1575" />
+        <entry key="..\:/AndroidStudioProjects/Sudoku/app/src/main/res/drawable/from4to6base.xml" value="0.1575" />
+        <entry key="..\:/AndroidStudioProjects/Sudoku/app/src/main/res/drawable/from4to6near_selected.xml" value="0.1575" />
+        <entry key="..\:/AndroidStudioProjects/Sudoku/app/src/main/res/drawable/from4to6selected.xml" value="0.1575" />
+        <entry key="..\:/AndroidStudioProjects/Sudoku/app/src/main/res/drawable/from4to6wrong.xml" value="0.1575" />
+        <entry key="..\:/AndroidStudioProjects/Sudoku/app/src/main/res/drawable/horizontal_border.xml" value="0.1575" />
+        <entry key="..\:/AndroidStudioProjects/Sudoku/app/src/main/res/drawable/l.xml" value="0.1575" />
+        <entry key="..\:/AndroidStudioProjects/Sudoku/app/src/main/res/drawable/less4.xml" value="0.1575" />
+        <entry key="..\:/AndroidStudioProjects/Sudoku/app/src/main/res/drawable/near_selected.xml" value="0.1575" />
+        <entry key="..\:/AndroidStudioProjects/Sudoku/app/src/main/res/drawable/r.xml" value="0.1575" />
+        <entry key="..\:/AndroidStudioProjects/Sudoku/app/src/main/res/drawable/rl.xml" value="0.1575" />
+        <entry key="..\:/AndroidStudioProjects/Sudoku/app/src/main/res/drawable/selected.xml" value="0.122" />
+        <entry key="..\:/AndroidStudioProjects/Sudoku/app/src/main/res/drawable/u.xml" value="0.1575" />
+        <entry key="..\:/AndroidStudioProjects/Sudoku/app/src/main/res/drawable/ud.xml" value="0.1575" />
+        <entry key="..\:/AndroidStudioProjects/Sudoku/app/src/main/res/drawable/udl.xml" value="0.1575" />
+        <entry key="..\:/AndroidStudioProjects/Sudoku/app/src/main/res/drawable/udr.xml" value="0.1575" />
+        <entry key="..\:/AndroidStudioProjects/Sudoku/app/src/main/res/drawable/udrl.xml" value="0.1575" />
+        <entry key="..\:/AndroidStudioProjects/Sudoku/app/src/main/res/drawable/ul.xml" value="0.1575" />
+        <entry key="..\:/AndroidStudioProjects/Sudoku/app/src/main/res/drawable/ur.xml" value="0.1575" />
+        <entry key="..\:/AndroidStudioProjects/Sudoku/app/src/main/res/drawable/urd.xml" value="0.1575" />
+        <entry key="..\:/AndroidStudioProjects/Sudoku/app/src/main/res/drawable/url.xml" value="0.1575" />
+        <entry key="..\:/AndroidStudioProjects/Sudoku/app/src/main/res/drawable/wide_border.xml" value="0.1575" />
+        <entry key="..\:/AndroidStudioProjects/Sudoku/app/src/main/res/drawable/wrong.xml" value="0.124" />
+        <entry key="..\:/AndroidStudioProjects/Sudoku/app/src/main/res/layout-land/activity_choose.xml" value="0.21516754850088182" />
+        <entry key="..\:/AndroidStudioProjects/Sudoku/app/src/main/res/layout-land/activity_game.xml" value="0.21516754850088182" />
+        <entry key="..\:/AndroidStudioProjects/Sudoku/app/src/main/res/layout-land/activity_main.xml" value="0.21516754850088182" />
+        <entry key="..\:/AndroidStudioProjects/Sudoku/app/src/main/res/layout-land/header_fragment.xml" value="0.21516754850088182" />
+        <entry key="..\:/AndroidStudioProjects/Sudoku/app/src/main/res/layout/activity_choose.xml" value="0.20863616930312098" />
+        <entry key="..\:/AndroidStudioProjects/Sudoku/app/src/main/res/layout/activity_end.xml" value="0.20863616930312098" />
+        <entry key="..\:/AndroidStudioProjects/Sudoku/app/src/main/res/layout/activity_game.xml" value="0.1425531914893617" />
+        <entry key="..\:/AndroidStudioProjects/Sudoku/app/src/main/res/layout/activity_main.xml" value="0.264" />
+        <entry key="..\:/AndroidStudioProjects/Sudoku/app/src/main/res/layout/activity_settings.xml" value="0.176" />
+        <entry key="..\:/AndroidStudioProjects/Sudoku/app/src/main/res/layout/buttons_fragment.xml" value="0.2" />
+        <entry key="..\:/AndroidStudioProjects/Sudoku/app/src/main/res/layout/game_activity.xml" value="0.20863616930312098" />
+        <entry key="..\:/AndroidStudioProjects/Sudoku/app/src/main/res/layout/game_over.xml" value="0.20863616930312098" />
+        <entry key="..\:/AndroidStudioProjects/Sudoku/app/src/main/res/layout/header_fragment.xml" value="0.20863616930312098" />
+        <entry key="..\:/AndroidStudioProjects/Sudoku/app/src/main/res/layout/pause.xml" value="0.20863616930312098" />
+        <entry key="..\:/AndroidStudioProjects/Sudoku/app/src/main/res/layout/rules_activity.xml" value="0.20863616930312098" />
+        <entry key="..\:/AndroidStudioProjects/Sudoku/app/src/main/res/layout/setting_activity.xml" value="0.22826086956521738" />
+        <entry key="..\:/AndroidStudioProjects/Sudoku/app/src/main/res/layout/testactivity.xml" value="0.20863616930312098" />
+        <entry key="..\:/AndroidStudioProjects/Sudoku/app/src/main/res/layout/tools_fragment.xml" value="0.2" />
+        <entry key="..\:/AndroidStudioProjects/Sudoku/app/src/main/res/layout/win.xml" value="0.20778110303548525" />
+      </map>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="Android Studio default JDK" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/build/classes" />
+  </component>
+  <component name="ProjectType">
+    <option name="id" value="Android" />
+  </component>
+</project>

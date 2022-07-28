@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="@android:color/white" />
+            <stroke android:width="0.25dp" android:color="@color/black"/>
+        </shape>
+    </item>
+    <item>
+        <scale android:scaleWidth="95%"
+            android:scaleGravity="end"
+            android:drawable="@drawable/divider"
+            android:level="1">
+        </scale>
+    </item>
+</layer-list>
