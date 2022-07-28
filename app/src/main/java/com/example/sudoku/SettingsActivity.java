@@ -4,7 +4,6 @@ import static com.example.sudoku.MainActivity.stateOfGame;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -78,7 +77,6 @@ public class SettingsActivity extends AppCompatActivity {
                     long minutes = Long.parseLong(((TextView) findViewById(R.id.editTextNumber3)).getText().toString());
                     long seconds = Long.parseLong(((TextView) findViewById(R.id.editTextNumber2)).getText().toString());
                     stateOfGame.time_limit = minutes*60 + seconds;
-                    Log.wtf("sec", stateOfGame.time_limit+"");
                     ((TextView) findViewById(R.id.editTextNumber3)).setText(minutes+"");
                     ((TextView) findViewById(R.id.editTextNumber2)).setText(seconds+"");
                     if(stateOfGame.time_limit == 0){

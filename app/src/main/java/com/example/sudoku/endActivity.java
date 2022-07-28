@@ -70,7 +70,7 @@ public class endActivity extends AppCompatActivity {
             outputStreamWriter.write(gson.toJson(stateOfGame));
             outputStreamWriter.close();
         }catch (IOException e){
-            e.printStackTrace();
+
         }
     }
 }

@@ -8,7 +8,6 @@ import static com.example.sudoku.MainActivity.stateOfGame;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -84,7 +83,7 @@ public class GameActivity extends FragmentActivity {
                 }
             }
         }catch (Exception e){
-            e.printStackTrace();
+
         }
     }
 
@@ -245,7 +244,6 @@ public class GameActivity extends FragmentActivity {
                                 else {
                                     stateOfGame.table_notes[row][col][Integer.parseInt(current_button.getText().toString()) - 1] = 0;
                                 }
-                                Log.e("fuck", Arrays.toString(stateOfGame.table_notes[row][col]));
                                 String new_text = "";
                                 for (int j = 0; j < max_num; j++) {
                                     new_text += chars[stateOfGame.table_notes[row][col][j]] + "  ";

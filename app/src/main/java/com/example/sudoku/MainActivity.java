@@ -156,7 +156,7 @@ public class MainActivity extends AppCompatActivity {
             outputStreamWriter.write(gson.toJson(stateOfGame));
             outputStreamWriter.close();
         }catch (Exception e){
-            e.printStackTrace();
+
         }
     }
 }

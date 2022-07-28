@@ -121,7 +121,6 @@ public class ChooseActivity extends AppCompatActivity {
                 catch (Exception e) {
                     Toast.makeText(getApplicationContext(), R.string.error3, Toast.LENGTH_LONG).show();
                     input_max_num.setText("9");
-                    e.printStackTrace();
                 }
             }
         };
