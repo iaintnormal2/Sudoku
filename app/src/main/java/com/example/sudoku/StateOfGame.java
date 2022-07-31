@@ -2,6 +2,8 @@ package com.example.sudoku;
 
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
 //Это класс в котором содержатся все переменные, использующиеся в программе
 //Он был сделан, чтобы было проще их было записать в файл и достать оттуда
 public class StateOfGame {
@@ -50,6 +52,6 @@ public class StateOfGame {
     //Нужно, чтобы убирать те, которые больше не понадобится ставить и возвращать их при необходимости
     public int[] filled_numbers;
 
-    //Id ячейки, которая была нажата последней
-    public TextView current_cell;
+    //Все предыдущие состояния поля
+    ArrayList<int[]> all_the_previous_fields = new ArrayList<>();
 }

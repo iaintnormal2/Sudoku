@@ -148,8 +148,21 @@ public class MainActivity extends AppCompatActivity {
 
     //Это сохранение всех настроек и параметров последней игры
     @Override
-    public void onBackPressed(){
-        super.onBackPressed();
+    public void onPause(){
+        super.onPause();
+        try{
+            Gson gson = new Gson();
+            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(openFileOutput("GameState.json", Context.MODE_PRIVATE));
+            outputStreamWriter.write(gson.toJson(stateOfGame));
+            outputStreamWriter.close();
+        }catch (Exception e){
+
+        }
+    }
+
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
         try{
             Gson gson = new Gson();
             OutputStreamWriter outputStreamWriter = new OutputStreamWriter(openFileOutput("GameState.json", Context.MODE_PRIVATE));

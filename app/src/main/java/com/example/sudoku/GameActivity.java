@@ -20,6 +20,7 @@ import java.util.Arrays;
 public class GameActivity extends FragmentActivity {
     //кнопка, которая была нажата последней
     Button current_button;
+    public static TextView current_cell;
     //все кнопки, которые могут быть на экране
     public static int[] buttons;
 
@@ -30,8 +31,8 @@ public class GameActivity extends FragmentActivity {
     private void paint(int[] buttons) {
         try {
             // столбец и строка выделенной ячейки
-            int row = (stateOfGame.current_cell.getId() - 626) / max_num;
-            int col = (stateOfGame.current_cell.getId() - 626) % max_num;
+            int row = (current_cell.getId() - 626) / max_num;
+            int col = (current_cell.getId() - 626) % max_num;
             //убираем подсветку у всех ячеек
             for (int i = 0; i < max_num; i++) {
                 for (int j = 0; j < max_num; j++) {
@@ -62,13 +63,13 @@ public class GameActivity extends FragmentActivity {
                 }
             }
             //если в ячейке правильная цифра, она пустая или подсвечивать ошибки не нужно, подсвечиваем синим
-            if (Arrays.binarySearch(chars, stateOfGame.current_cell.getText().toString()) == stateOfGame.cells.field[row][col] || !stateOfGame.settings[2]
+            if (Arrays.binarySearch(chars, current_cell.getText().toString()) == stateOfGame.cells.field[row][col] || !stateOfGame.settings[2]
                     || stateOfGame.current_field[row][col] <= 0) {
-                stateOfGame.current_cell.setBackgroundColor(getResources().getColor(R.color.transparent_light_blue));
+                current_cell.setBackgroundColor(getResources().getColor(R.color.transparent_light_blue));
             }
             // если цифра неправильная, то подсвечиваем красным
             else {
-                stateOfGame.current_cell.setBackgroundColor(getResources().getColor(R.color.transparent_red));
+                current_cell.setBackgroundColor(getResources().getColor(R.color.transparent_red));
                 ((TextView) (findViewById(R.id.header)).findViewById(R.id.textView4)).setText(stateOfGame.mistakes + "");
             }
             //если какую-то цифру больше не потребуется ставить, то кнопку, на которой она написана, нужно убрать,
@@ -93,6 +94,8 @@ public class GameActivity extends FragmentActivity {
         super.onCreate(SavedInstanceState);
         setContentView(R.layout.activity_game);
 
+        current_cell = new TextView(this);
+
         //все кнопки, которые могут быть на экране
         buttons = new int[]{R.id.button_1, R.id.button_2, R.id.button_3, R.id.button_4, R.id.button_5,
                 R.id.button_6, R.id.button_7, R.id.button_8, R.id.button_9, R.id.button_A, R.id.button_B,
@@ -105,15 +108,15 @@ public class GameActivity extends FragmentActivity {
             (findViewById(buttons[i])).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (stateOfGame.current_cell != null) {
-                        //Если это одна из тех ячеек, которые изначально заполнены
-                        if (stateOfGame.current_cell.getCurrentTextColor() == getResources().getColor(R.color.dark_blue)) {
+                    if (current_cell != null) {
+                        //Если это не одна из тех ячеек, которые изначально заполнены
+                        if (current_cell.getCurrentTextColor() == getResources().getColor(R.color.dark_blue)) {
 
                             current_button = (Button) view;
 
                             //Положение выбраной ячейки
-                            @SuppressLint("ResourceType") int row = (stateOfGame.current_cell.getId() - 626) / max_num;
-                            @SuppressLint("ResourceType") int col = (stateOfGame.current_cell.getId() - 626) % max_num;
+                            @SuppressLint("ResourceType") int row = (current_cell.getId() - 626) / max_num;
+                            @SuppressLint("ResourceType") int col = (current_cell.getId() - 626) % max_num;
 
                             //Если режим заметок выключен
                             if (!stateOfGame.note_mode) {
@@ -127,7 +130,7 @@ public class GameActivity extends FragmentActivity {
                                 }
 
                                 //Собственно ставим цифру
-                                stateOfGame.current_cell.setText(current_button.getText());
+                                current_cell.setText(current_button.getText());
 
                                 //Замена значений предыдущего состояния поля
                                 //Только текущую ячейку менять не выйдет, потому что тогда
@@ -142,7 +145,7 @@ public class GameActivity extends FragmentActivity {
                                 stateOfGame.current_field[row][col] = Integer.parseInt(current_button.getText().toString());
                                 if (stateOfGame.current_field[row][col] != stateOfGame.cells.field[row][col]) {
                                     stateOfGame.mistakes++;
-                                    if (stateOfGame.settings[7] && stateOfGame.mistakes > stateOfGame.mistakes_limit) {
+                                    if (stateOfGame.settings[7] && stateOfGame.mistakes >= stateOfGame.mistakes_limit) {
                                         finish_game(getResources().getString(R.string.becauseofmistakes), getResources().getString(R.string.gameover),
                                                 ((TextView) findViewById(R.id.header).findViewById(R.id.textView3)).getText().toString());
                                     }
@@ -298,7 +301,7 @@ public class GameActivity extends FragmentActivity {
                             //Завершение игры при превышении лимита на ошибки
                             if (stateOfGame.current_field[i][j] != stateOfGame.cells.field[i][j] && stateOfGame.current_field[i][j] > 0) {
                                 stateOfGame.mistakes++;
-                                if (stateOfGame.settings[7] && stateOfGame.mistakes > stateOfGame.mistakes_limit) {
+                                if (stateOfGame.settings[7] && stateOfGame.mistakes >= stateOfGame.mistakes_limit) {
                                     finish_game(getResources().getString(R.string.becauseofmistakes), getResources().getString(R.string.gameover),
                                             ((TextView) findViewById(R.id.header).findViewById(R.id.textView3)).getText().toString());
                                 }
@@ -311,7 +314,7 @@ public class GameActivity extends FragmentActivity {
                                 ((TextView) (findViewById(R.id.fragmentContainerView)).findViewById(table_text[i][j])).setText("");
                             }
                             //Выбранная ячейка теперь та, которая изменилась
-                            stateOfGame.current_cell = (findViewById(R.id.fragmentContainerView)).findViewById(table_text[i][j]);
+                            current_cell = (findViewById(R.id.fragmentContainerView)).findViewById(table_text[i][j]);
                         }
                         //Запоминаем состояние заметок
                         for (int k = 0; k < max_num; k++) {
@@ -342,11 +345,11 @@ public class GameActivity extends FragmentActivity {
             @SuppressLint("ResourceType")
             @Override
             public void onClick(View view) {
-                if (stateOfGame.current_cell != null) {
-                    if (stateOfGame.current_cell.getCurrentTextColor() == getResources().getColor(R.color.dark_blue)) {
+                if (current_cell != null) {
+                    if (current_cell.getCurrentTextColor() == getResources().getColor(R.color.dark_blue)) {
                         //Положение ячейки, которую надо стереть
-                        int row = (stateOfGame.current_cell.getId() - 626) / max_num;
-                        int col = (stateOfGame.current_cell.getId() - 626) % max_num;
+                        int row = (current_cell.getId() - 626) / max_num;
+                        int col = (current_cell.getId() - 626) % max_num;
 
                         //Цифр, естественно, стало меньше
                         if (stateOfGame.current_field[row][col] > 0) {
@@ -362,7 +365,7 @@ public class GameActivity extends FragmentActivity {
                             stateOfGame.table_notes[row][col] = new int[max_num];
                         }
                         stateOfGame.current_field[row][col] = 0;
-                        stateOfGame.current_cell.setText("");
+                        current_cell.setText("");
 
                         paint(buttons);
                         //Если были заметки, то их тоже стираем
@@ -385,7 +388,7 @@ public class GameActivity extends FragmentActivity {
             public void onClick(View view) {
                 stateOfGame.hints++;
                 //Если подсказок больше, чем можно, игра завершается
-                if (stateOfGame.settings[8] && stateOfGame.hints > stateOfGame.hints_limit) {
+                if (stateOfGame.settings[8] && stateOfGame.hints >= stateOfGame.hints_limit) {
                     finish_game(getResources().getString(R.string.becauseofhints), getResources().getString(R.string.gameover),
                             ((TextView) findViewById(R.id.header).findViewById(R.id.textView3)).getText().toString());
                 }
@@ -409,7 +412,7 @@ public class GameActivity extends FragmentActivity {
                     cell_for_hint = empty_cells.get((int) (Math.random() * empty_cells.size()));
                 }
                 //Тепрь выбранная ячейка та, где подсказка
-                stateOfGame.current_cell = cell_for_hint;
+                current_cell = cell_for_hint;
                 //Дальше делается всё то же самое, что при вводе
                 int row = (cell_for_hint.getId() - 626) / max_num;
                 int col = (cell_for_hint.getId() - 626) % max_num;

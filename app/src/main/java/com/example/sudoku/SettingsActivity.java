@@ -4,6 +4,7 @@ import static com.example.sudoku.MainActivity.stateOfGame;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -89,21 +90,21 @@ public class SettingsActivity extends AppCompatActivity {
                     }
                 }
                 try{
-                    int mistakes = Integer.parseInt(((TextView) findViewById(R.id.editTextNumber4)).getText().toString());
-                    stateOfGame.mistakes = mistakes;
+                    stateOfGame.mistakes_limit = Integer.parseInt(((TextView) findViewById(R.id.editTextNumber4)).getText().toString());
                 }catch(NumberFormatException e){
                     if(stateOfGame.settings[7]){
                         Toast.makeText(getApplicationContext(), R.string.error3, Toast.LENGTH_SHORT).show();
                     }
                 }
                 try{
-                    stateOfGame.hints = Integer.parseInt(((TextView) findViewById(R.id.editTextNumber5)).getText().toString());
+                    stateOfGame.hints_limit = Integer.parseInt(((TextView) findViewById(R.id.editTextNumber5)).getText().toString());
+                    Log.e("wtf", Integer.parseInt(((TextView) findViewById(R.id.editTextNumber5)).getText().toString())+"");
                 }catch(NumberFormatException e){
                     if(stateOfGame.settings[8]){
                         Toast.makeText(getApplicationContext(), R.string.error3, Toast.LENGTH_SHORT).show();
                     }
                 }
-                finish();
+                SettingsActivity.super.onBackPressed();
             }
         });
     }

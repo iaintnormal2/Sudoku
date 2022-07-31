@@ -119,6 +119,7 @@ public class HeaderFragment extends Fragment {
     {
         super .onPause();
         stateOfGame.running = false;
+        System.out.println("ok");
     }
 
     //Продолжение осчёта времени
@@ -127,6 +128,32 @@ public class HeaderFragment extends Fragment {
     {
         super .onResume();
         stateOfGame.running = true ;
+        //Если пользватель решил не смотреть на количество своих ошибок,
+        //текстовое поле для их вывода становится невидимым
+        TextView mistakes_output = view.findViewById(R.id.textView4);
+        if(!stateOfGame.settings[4]){
+            mistakes_output.setVisibility(View.INVISIBLE);
+        }else{
+            mistakes_output.setVisibility(View.VISIBLE);
+        }
+
+        //А если ему не нужно количество подсказок, то
+        //поле для их вывода тоже нужно скрыть
+        TextView hints_output = view.findViewById(R.id.textView6);
+        if(!stateOfGame.settings[5]){
+            hints_output.setVisibility(View.INVISIBLE);
+        }else{
+            hints_output.setVisibility(View.VISIBLE);
+        }
+
+        //Если пользователь совсем обнаглел, и ему не нужен таймер,
+        //то и его убираем
+        TextView time_output = view.findViewById(R.id.textView3);
+        if(!stateOfGame.settings[3]){
+            time_output.setVisibility(View.INVISIBLE);
+        }else{
+            time_output.setVisibility(View.VISIBLE);
+        }
     }
 
     //Сам отсчёт времени
@@ -154,18 +181,18 @@ public class HeaderFragment extends Fragment {
                     //Если таймер запущен, увеличивается количество секунд
                     if (stateOfGame.running) {
                         stateOfGame.seconds++;
-                    }
-                    //Если превышен лимит времени, то игра завершается
-                    if (stateOfGame.settings[6] && stateOfGame.seconds > stateOfGame.time_limit) {
-                        Intent intent = new Intent(getActivity(), endActivity.class);
-                        intent.putExtra("reason", getResources().getString(R.string.becauseoftime));
-                        intent.putExtra("time", getResources().getString(R.string.time) + ((TextView) view.findViewById(R.id.textView3)).getText().toString());
-                        intent.putExtra("mistakes", getResources().getString(R.string.mistakes) + stateOfGame.mistakes);
-                        intent.putExtra("hints", getResources().getString(R.string.hints) + stateOfGame.hints);
-                        intent.putExtra("result", getResources().getString(R.string.gameover));
-                        startActivity(intent);
-                        getActivity().finish();
-                        Thread.currentThread().interrupt();
+                        //Если превышен лимит времени, то игра завершается
+                        if (stateOfGame.settings[6] && stateOfGame.seconds > stateOfGame.time_limit) {
+                            Intent intent = new Intent(getActivity(), endActivity.class);
+                            intent.putExtra("reason", getResources().getString(R.string.becauseoftime));
+                            intent.putExtra("time", getResources().getString(R.string.time) + ((TextView) view.findViewById(R.id.textView3)).getText().toString());
+                            intent.putExtra("mistakes", getResources().getString(R.string.mistakes) + stateOfGame.mistakes);
+                            intent.putExtra("hints", getResources().getString(R.string.hints) + stateOfGame.hints);
+                            intent.putExtra("result", getResources().getString(R.string.gameover));
+                            startActivity(intent);
+                            getActivity().finish();
+                            Thread.currentThread().interrupt();
+                        }
                     }
                     //Ждём секунду
                     handler.postDelayed(this, 1000);

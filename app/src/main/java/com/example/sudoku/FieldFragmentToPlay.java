@@ -7,6 +7,7 @@ package com.example.sudoku;
 // ещё здесь пометки
 
 import static com.example.sudoku.GameActivity.buttons;
+import static com.example.sudoku.GameActivity.current_cell;
 import static com.example.sudoku.MainActivity.stateOfGame;
 import static com.example.sudoku.NoteFieldFragment.cell_size;
 import static com.example.sudoku.NoteFieldFragment.text_size;
@@ -97,7 +98,7 @@ public class FieldFragmentToPlay extends Fragment {
                         cell.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View cell) {
-                                stateOfGame.current_cell = (TextView) cell;
+                                current_cell = (TextView) cell;
                                 //Убираем окраску всех ячеек
                                 for(int i = 0; i < max_num; i++){
                                     for(int j = 0; j < max_num; j++){
@@ -127,7 +128,7 @@ public class FieldFragmentToPlay extends Fragment {
                                     }
                                 }
                                 //если в ячейке правильная цифра, она пустая или подсвечивать ошибки не нужно, подсвечиваем синим
-                                if (Arrays.binarySearch(chars, stateOfGame.current_cell.getText().toString()) == stateOfGame.cells.field[row][col] || !stateOfGame.settings[2]
+                                if (Arrays.binarySearch(chars, current_cell.getText().toString()) == stateOfGame.cells.field[row][col] || !stateOfGame.settings[2]
                                         || stateOfGame.current_field[row][col] <= 0) {
                                     cell.setBackgroundColor(getResources().getColor(R.color.transparent_light_blue));
                                 }
@@ -147,7 +148,7 @@ public class FieldFragmentToPlay extends Fragment {
         }
 
         if(savedInstanceState != null){
-            stateOfGame.current_cell = view.findViewById(savedInstanceState.getInt("current_cell"));
+            current_cell = view.findViewById(savedInstanceState.getInt("current_cell"));
         }
 
         return view;
