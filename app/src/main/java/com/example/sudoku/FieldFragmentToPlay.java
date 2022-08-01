@@ -121,7 +121,7 @@ public class FieldFragmentToPlay extends Fragment {
                                             if (!stateOfGame.note_mode) {
 
                                                 //Цифр, которые такие же, как выбранная, становится больше
-                                                stateOfGame.filled_numbers[Arrays.binarySearch(chars, current_button.getText().toString())-1 - 1]++;
+                                                stateOfGame.filled_numbers[Arrays.binarySearch(chars, current_button.getText().toString()) - 1]++;
 
                                                 //Если в ячейке что-то было, этого становится меньше
                                                 if (stateOfGame.all_fields.get(stateOfGame.all_fields.size() - 1)[row][col] > 0) {
@@ -138,7 +138,7 @@ public class FieldFragmentToPlay extends Fragment {
                                                     }
                                                 }
 
-                                                stateOfGame.all_fields.get(stateOfGame.all_fields.size() - 1)[row][col] = Arrays.binarySearch(chars, current_button.getText().toString())-1;
+                                                stateOfGame.all_fields.get(stateOfGame.all_fields.size() - 1)[row][col] = Arrays.binarySearch(chars, current_button.getText().toString());
 
                                                 boolean is_mistake = false;
                                                 boolean has_zero = false;

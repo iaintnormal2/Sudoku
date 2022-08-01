@@ -103,6 +103,15 @@ public class GameActivity extends FragmentActivity {
                 R.id.button_I, R.id.button_J, R.id.button_K, R.id.button_L, R.id.button_M, R.id.button_N,
                 R.id.button_O, R.id.button_P};
 
+        try{
+            if(stateOfGame.settings[10]) {
+                current_button.setTextColor(getResources().getColor(R.color.dark_blue));
+            }
+        }catch(NullPointerException e){
+            current_button = findViewById(buttons[0]);
+            current_button.setTextColor(getResources().getColor(R.color.dark_blue));
+        }
+
         //нужное количество кнопок становится видимым и устанавливается функция, вызываемая при нажатии
         for (int i = 0; i < max_num; i++) {
             (findViewById(buttons[i])).setOnClickListener(new View.OnClickListener() {
