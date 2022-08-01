@@ -16,15 +16,6 @@ public class StateOfGame {
     // что пользователь видит в начале игры
     public Table cells;
 
-    //Предыдущее состояние заметок на поле
-    public int[][][] previous_table_notes;
-    //Актуальное состояние заметок на поле
-    public int[][][] table_notes;
-    //Актуальное состояние поля
-    public int[][] current_field;
-    //Предыдущее состояние поля
-    public int[][] previous_field;
-
     //Количества ошибок и подсказок, время, прошедшее с начала игры
     public int mistakes = 0;
     public int hints = 0;
@@ -52,6 +43,9 @@ public class StateOfGame {
     //Нужно, чтобы убирать те, которые больше не понадобится ставить и возвращать их при необходимости
     public int[] filled_numbers;
 
-    //Все предыдущие состояния поля
-    ArrayList<int[]> all_the_previous_fields = new ArrayList<>();
+    //Все состояния поля
+    ArrayList<int[][]> all_fields = new ArrayList<>();
+
+    //Все состояния заметок
+    ArrayList<int[][][]> all_notes = new ArrayList<>();
 }

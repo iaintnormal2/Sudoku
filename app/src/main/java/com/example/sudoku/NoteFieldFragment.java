@@ -4,6 +4,7 @@ import static com.example.sudoku.MainActivity.stateOfGame;
 
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,8 @@ import android.widget.TableRow;
 import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
+
+import java.util.ArrayList;
 
 public class NoteFieldFragment extends Fragment {
 
@@ -38,18 +41,14 @@ public class NoteFieldFragment extends Fragment {
         view.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
         view.setGravity(View.TEXT_ALIGNMENT_GRAVITY);
 
-        if(stateOfGame.table_notes == null){
-            stateOfGame.table_notes= new int[max_num][max_num][max_num];
-        }
-        if(stateOfGame.previous_table_notes == null){
-            stateOfGame.previous_table_notes= new int[max_num][max_num][max_num];
-        }
-
         if(savedInstanceState != null) {
-            for (int i = 0; i < max_num; i++) {
-                for (int j = 0; j < max_num; j++) {
-                    stateOfGame.table_notes[i][j] = savedInstanceState.getIntArray("table_notes"+i+j);
-                    stateOfGame.previous_table_notes[i][j] = savedInstanceState.getIntArray("previous_table_notes"+i+j);
+            stateOfGame.all_notes = new ArrayList<>();
+            for(int i = 0; i < savedInstanceState.getInt("changes"); i++){
+                stateOfGame.all_notes.add(new int[max_num][max_num][max_num]);
+                for(int j = 0; j < max_num; j++){
+                    for(int k = 0; k < max_num; k++){
+                        stateOfGame.all_notes.get(i)[j][k] = savedInstanceState.getIntArray("notes"+i+j+k);
+                    }
                 }
             }
         }
@@ -79,7 +78,7 @@ public class NoteFieldFragment extends Fragment {
 
                         String text = "";
                         for(int m = 0; m < max_num; m++){
-                            text += chars[stateOfGame.table_notes[row][col][m]]+"  ";
+                            text += chars[stateOfGame.all_notes.get(stateOfGame.all_notes.size() - 1)[row][col][m]]+"  ";
                             if((m+1)% stateOfGame.cells.sqrt_2 == 0){
                                 text+="\n";
                             }
@@ -178,11 +177,14 @@ public class NoteFieldFragment extends Fragment {
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState){
         super.onSaveInstanceState(savedInstanceState);
-        for(int i = 0; i < max_num; i++){
-            for(int j = 0; j < max_num; j++){
-                savedInstanceState.putIntArray("table_notes"+i+j, stateOfGame.table_notes[i][j]);
-                savedInstanceState.putIntArray("previous_table_notes"+i+j, stateOfGame.previous_table_notes[i][j]);
+        for(int i = 0; i < stateOfGame.all_notes.size(); i++){
+            for(int j = 0; j < stateOfGame.all_notes.get(i).length; j++){
+                for(int k = 0; k < stateOfGame.all_notes.get(i)[j].length; k++){
+                    Log.e("indexes", i+" "+j+" "+k);
+                    savedInstanceState.putIntArray("notes"+i+j+k, stateOfGame.all_notes.get(i)[j][k]);
+                }
             }
         }
+        savedInstanceState.putInt("changes", stateOfGame.all_notes.size());
     }
 }

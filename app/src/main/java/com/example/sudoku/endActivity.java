@@ -14,6 +14,7 @@ import com.google.gson.Gson;
 
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.util.ArrayList;
 
 public class endActivity extends AppCompatActivity {
     @Override
@@ -41,14 +42,22 @@ public class endActivity extends AppCompatActivity {
                     stateOfGame.mistakes = 0;
                     stateOfGame.hints = 0;
                     stateOfGame.seconds = 0;
+
+                    stateOfGame.all_fields = new ArrayList<>();
+                    stateOfGame.all_fields.add(new int[stateOfGame.max_num][stateOfGame.max_num]);
+                    stateOfGame.all_fields.add(new int[stateOfGame.max_num][stateOfGame.max_num]);
+
                     for(int i = 0; i < stateOfGame.max_num; i++){
                         for(int j = 0; j < stateOfGame.max_num; j++){
-                            stateOfGame.current_field[i][j] = stateOfGame.cells.question[i][j];
-                            stateOfGame.previous_field[i][j] = stateOfGame.cells.question[i][j];
+                            stateOfGame.all_fields.get(0)[i][j] = stateOfGame.cells.question[i][j];
+                            stateOfGame.all_fields.get(1)[i][j] = stateOfGame.cells.question[i][j];
                         }
                     }
-                    stateOfGame.table_notes = new int[stateOfGame.max_num][stateOfGame.max_num][stateOfGame.max_num];
-                    stateOfGame.previous_table_notes = new int[stateOfGame.max_num][stateOfGame.max_num][stateOfGame.max_num];
+
+                    stateOfGame.all_notes = new ArrayList<>();
+                    stateOfGame.all_notes.add(new int[stateOfGame.max_num][stateOfGame.max_num][stateOfGame.max_num]);
+                    stateOfGame.all_notes.add(new int[stateOfGame.max_num][stateOfGame.max_num][stateOfGame.max_num]);
+
                     startActivity(intent);
                     finish();
                 }

@@ -22,6 +22,7 @@ import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 public class FieldFragmentToPlay extends Fragment {
@@ -42,12 +43,17 @@ public class FieldFragmentToPlay extends Fragment {
         table_text = new int[max_num][max_num];
 
         if(savedInstanceState != null){
+            stateOfGame.all_fields = new ArrayList<>();
+            for(int i = 0; i < savedInstanceState.getInt("changes"); i++) {
+                stateOfGame.all_fields.add(new int[max_num][max_num]);
+                for (int j = 0; j < max_num; j++) {
+                    stateOfGame.all_fields.get(i)[j] = savedInstanceState.getIntArray("current_field" + i + j);
+                }
+            }
             for(int i = 0; i < max_num; i++){
-                stateOfGame.current_field[i] = savedInstanceState.getIntArray("current_field"+i);
                 table_text[i] = savedInstanceState.getIntArray("cells"+i);
                 stateOfGame.cells.question[i] = savedInstanceState.getIntArray("question"+i);
                 stateOfGame.cells.field[i] = savedInstanceState.getIntArray("answer"+i);
-                stateOfGame.previous_field[i] = savedInstanceState.getIntArray("previous_field"+i);
             }
             buttons = savedInstanceState.getIntArray("buttons");
         }
@@ -88,8 +94,8 @@ public class FieldFragmentToPlay extends Fragment {
                             cell.setTextColor(getResources().getColor(R.color.dark_blue));
                         }
                         //Установка текста
-                        if(stateOfGame.current_field[row][col] >= 0) {
-                            cell.setText(chars[stateOfGame.current_field[row][col]]);
+                        if(stateOfGame.all_fields.get(stateOfGame.all_fields.size()-1)[row][col] >= 0) {
+                            cell.setText(chars[stateOfGame.all_fields.get(stateOfGame.all_fields.size()-1)[row][col]]);
                         }
                         little_row.addView(cell);
 
@@ -121,7 +127,7 @@ public class FieldFragmentToPlay extends Fragment {
                                 if(stateOfGame.settings[1]) {
                                     for (int i = 0; i < max_num; i++) {
                                         for (int j = 0; j < max_num; j++) {
-                                            if (stateOfGame.current_field[row][col] > 0 && stateOfGame.current_field[i][j] == stateOfGame.current_field[row][col]) {
+                                            if (stateOfGame.all_fields.get(stateOfGame.all_fields.size()-1)[row][col] > 0 && stateOfGame.all_fields.get(stateOfGame.all_fields.size()-1)[i][j] == stateOfGame.all_fields.get(stateOfGame.all_fields.size()-1)[row][col]) {
                                                 view.findViewById(table_text[i][j]).setBackgroundColor(getResources().getColor(R.color.transparent_light_blue));
                                             }
                                         }
@@ -129,7 +135,7 @@ public class FieldFragmentToPlay extends Fragment {
                                 }
                                 //если в ячейке правильная цифра, она пустая или подсвечивать ошибки не нужно, подсвечиваем синим
                                 if (Arrays.binarySearch(chars, current_cell.getText().toString()) == stateOfGame.cells.field[row][col] || !stateOfGame.settings[2]
-                                        || stateOfGame.current_field[row][col] <= 0) {
+                                        || stateOfGame.all_fields.get(stateOfGame.all_fields.size()-1)[row][col] <= 0) {
                                     cell.setBackgroundColor(getResources().getColor(R.color.transparent_light_blue));
                                 }
                                 // если цифра неправильная, то подсвечиваем красным
@@ -160,11 +166,15 @@ public class FieldFragmentToPlay extends Fragment {
     public void onSaveInstanceState(Bundle savedInstanceState){
         super.onSaveInstanceState(savedInstanceState);
         for(int i = 0; i < max_num; i++){
-            savedInstanceState.putIntArray(("current_field"+i), stateOfGame.current_field[i]);
-            savedInstanceState.putIntArray(("previous_field"+i), stateOfGame.previous_field[i]);
             savedInstanceState.putIntArray(("question"+i), stateOfGame.cells.question[i]);
             savedInstanceState.putIntArray(("answer"+i), stateOfGame.cells.field[i]);
             savedInstanceState.putIntArray(("cells"+i), table_text[i]);
+            savedInstanceState.putInt("changes", stateOfGame.all_fields.size());
+        }
+        for(int i = 0; i < stateOfGame.all_fields.size(); i++) {
+            for (int j = 0; j < max_num; j++) {
+                savedInstanceState.putIntArray(("current_field" + i + j), stateOfGame.all_fields.get(i)[j]);
+            }
         }
         savedInstanceState.putIntArray("buttons", buttons);
     }

@@ -11,6 +11,8 @@ import android.widget.EditText;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.util.ArrayList;
+
 public class ChooseActivity extends AppCompatActivity {
 
 
@@ -75,22 +77,23 @@ public class ChooseActivity extends AppCompatActivity {
                         //Теперь можно решить, где какие цифры ставить, и запустить игру
                         stateOfGame.cells = new Table(max_num, stateOfGame.level);
 
-                        stateOfGame.previous_field = new int[max_num][max_num];
-
-                        stateOfGame.current_field = new int[max_num][max_num];
+                        stateOfGame.all_fields = new ArrayList<>();
 
                         stateOfGame.filled_numbers = new int[max_num];
 
-                        stateOfGame.table_notes = new int[max_num][max_num][max_num];
-                        stateOfGame.previous_table_notes = new int[max_num][max_num][max_num];
+                        stateOfGame.all_fields.add(new int[max_num][max_num]);
+                        stateOfGame.all_fields.add(new int[max_num][max_num]);
 
-                        //в начале игры предыдущий и текущий вид поля одинаковы
-                        for (int i = 0; i < max_num; i++) {
-                            for (int j = 0; j < max_num; j++) {
-                                stateOfGame.previous_field[i][j] = stateOfGame.cells.question[i][j];
-                                stateOfGame.current_field[i][j] = stateOfGame.cells.question[i][j];
+                        for(int i = 0; i < max_num; i++){
+                            for(int j = 0; j < max_num; j++){
+                                stateOfGame.all_fields.get(0)[i][j] = stateOfGame.cells.question[i][j];
+                                stateOfGame.all_fields.get(1)[i][j] = stateOfGame.cells.question[i][j];
                             }
                         }
+
+                        stateOfGame.all_notes = new ArrayList<>();
+                        stateOfGame.all_notes.add(new int[max_num][max_num][max_num]);
+                        stateOfGame.all_notes.add(new int[max_num][max_num][max_num]);
 
                         for (int i = 0; i < max_num; i++) {
                             for (int j = 0; j < max_num; j++) {

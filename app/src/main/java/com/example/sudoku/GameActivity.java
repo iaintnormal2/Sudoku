@@ -14,6 +14,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 import androidx.fragment.app.FragmentActivity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -56,7 +59,7 @@ public class GameActivity extends FragmentActivity {
             if (stateOfGame.settings[1]) {
                 for (int i = 0; i < max_num; i++) {
                     for (int j = 0; j < max_num; j++) {
-                        if (stateOfGame.current_field[row][col] > 0 && stateOfGame.current_field[i][j] == stateOfGame.current_field[row][col]) {
+                        if (stateOfGame.all_fields.get(stateOfGame.all_fields.size()-1)[row][col] > 0 && stateOfGame.all_fields.get(stateOfGame.all_fields.size()-1)[i][j] == stateOfGame.all_fields.get(stateOfGame.all_fields.size()-1)[row][col]) {
                             (findViewById(R.id.fragmentContainerView)).findViewById(table_text[i][j]).setBackgroundColor(getResources().getColor(R.color.transparent_light_blue));
                         }
                     }
@@ -64,7 +67,7 @@ public class GameActivity extends FragmentActivity {
             }
             //если в ячейке правильная цифра, она пустая или подсвечивать ошибки не нужно, подсвечиваем синим
             if (Arrays.binarySearch(chars, current_cell.getText().toString()) == stateOfGame.cells.field[row][col] || !stateOfGame.settings[2]
-                    || stateOfGame.current_field[row][col] <= 0) {
+                    || stateOfGame.all_fields.get(stateOfGame.all_fields.size()-1)[row][col] <= 0) {
                 current_cell.setBackgroundColor(getResources().getColor(R.color.transparent_light_blue));
             }
             // если цифра неправильная, то подсвечиваем красным
@@ -125,25 +128,24 @@ public class GameActivity extends FragmentActivity {
                                 stateOfGame.filled_numbers[Integer.parseInt(current_button.getText().toString()) - 1]++;
 
                                 //Если в ячейке что-то было, этого становится меньше
-                                if (stateOfGame.current_field[row][col] > 0) {
-                                    stateOfGame.filled_numbers[stateOfGame.current_field[row][col] - 1]--;
+                                if (stateOfGame.all_fields.get(stateOfGame.all_fields.size() - 1)[row][col] > 0) {
+                                    stateOfGame.filled_numbers[stateOfGame.all_fields.get(stateOfGame.all_fields.size() - 1)[row][col] - 1]--;
                                 }
 
                                 //Собственно ставим цифру
                                 current_cell.setText(current_button.getText());
 
-                                //Замена значений предыдущего состояния поля
-                                //Только текущую ячейку менять не выйдет, потому что тогда
-                                //не сохранятся предыдущие изменения, и вместо отмены одного действия получится отмена всего
-                                for (int i = 0; i < max_num; i++) {
-                                    for (int j = 0; j < max_num; j++) {
-                                        stateOfGame.previous_field[i][j] = stateOfGame.current_field[i][j];
+                                stateOfGame.all_fields.add(new int[max_num][max_num]);
+                                for (int j = 0; j < max_num; j++) {
+                                    for (int k = 0; k < max_num; k++) {
+                                        stateOfGame.all_fields.get(stateOfGame.all_fields.size() - 1)[j][k] = stateOfGame.all_fields.get(stateOfGame.all_fields.size() - 2)[j][k];
                                     }
                                 }
 
+                                stateOfGame.all_fields.get(stateOfGame.all_fields.size() - 1)[row][col] = Integer.parseInt(current_button.getText().toString());
+
                                 //Если пользователь превысил допустимое количество ошибок, игра завершается его поражением
-                                stateOfGame.current_field[row][col] = Integer.parseInt(current_button.getText().toString());
-                                if (stateOfGame.current_field[row][col] != stateOfGame.cells.field[row][col]) {
+                                if (stateOfGame.all_fields.get(stateOfGame.all_fields.size() - 1)[row][col] != stateOfGame.cells.field[row][col]) {
                                     stateOfGame.mistakes++;
                                     if (stateOfGame.settings[7] && stateOfGame.mistakes >= stateOfGame.mistakes_limit) {
                                         finish_game(getResources().getString(R.string.becauseofmistakes), getResources().getString(R.string.gameover),
@@ -151,117 +153,92 @@ public class GameActivity extends FragmentActivity {
                                     }
                                 }
 
-                                //Поскольку после того, как поставили цифры, состояние заметок тоже поменяетя, надо
-                                //его запомнить
+                                stateOfGame.all_notes.add(new int[max_num][max_num][max_num]);
                                 for (int i = 0; i < max_num; i++) {
                                     for (int j = 0; j < max_num; j++) {
                                         for (int k = 0; k < max_num; k++) {
-                                            stateOfGame.previous_table_notes[i][j][k] = stateOfGame.table_notes[i][j][k];
+                                            stateOfGame.all_notes.get(stateOfGame.all_notes.size() - 1)[i][j][k] = stateOfGame.all_notes.get(stateOfGame.all_notes.size() - 2)[i][j][k];
                                         }
                                     }
                                 }
 
-                                //А в ячейке с нормальной цифрой никаких заметок быть не должно
-                                stateOfGame.table_notes[row][col] = new int[max_num];
-                                ((TextView) (findViewById(R.id.fragmentContainerView3)).findViewById(row * max_num + col + 1000)).setText("");
+                                stateOfGame.all_notes.get(stateOfGame.all_notes.size() - 1)[row][col] = new int[max_num];
 
-                                //Если в соседних ячейках была такая цифра в виде заметки, она оттуда убирается
-                                //Тут по порядку для строки, столбца и квадрата, но принцип один
-                                for (int j = 0; j < max_num; j++) {
-                                    //Если заметка с такой цифрой есть
-                                    if (stateOfGame.table_notes[row][j][Arrays.binarySearch(chars, current_button.getText()) - 1] != 0) {
-
-                                        //Теперь то, что раньше было в ячейке, то есть цифра, которую нажали - это её предыдущее значение
-                                        stateOfGame.previous_table_notes[row][j][Arrays.binarySearch(chars, current_button.getText()) - 1] = Arrays.binarySearch(chars, current_button.getText().toString());
-                                        //А текущее - 0
-                                        stateOfGame.table_notes[row][j][Arrays.binarySearch(chars, current_button.getText()) - 1] = 0;
-
-                                        //Теперь в ячейку ставятся цифры, которые должны быть в качестве заметок
-                                        String new_text = "";
-                                        for (int k = 0; k < max_num; k++) {
-                                            new_text += chars[stateOfGame.table_notes[row][j][k]] + "  ";
-                                            if ((k + 1) % stateOfGame.cells.sqrt_2 == 0) {
-                                                new_text += "\n";
-                                            }
-                                        }
-                                        ((TextView) (findViewById(R.id.fragmentContainerView3)).findViewById(row * max_num + j + 1000)).setText(new_text);
-                                    }
-
-                                    if (stateOfGame.table_notes[j][col][Arrays.binarySearch(chars, current_button.getText()) - 1] != 0) {
-                                        stateOfGame.previous_table_notes[j][col][Arrays.binarySearch(chars, current_button.getText()) - 1] = Arrays.binarySearch(chars, current_button.getText().toString());
-                                        stateOfGame.table_notes[j][col][Arrays.binarySearch(chars, current_button.getText()) - 1] = 0;
-                                        String new_text = "";
-                                        for (int k = 0; k < max_num; k++) {
-                                            new_text += chars[stateOfGame.table_notes[j][col][k]] + "  ";
-                                            if ((k + 1) % stateOfGame.cells.sqrt_2 == 0) {
-                                                new_text += "\n";
-                                            }
-                                        }
-                                        ((TextView) (findViewById(R.id.fragmentContainerView3)).findViewById(j * max_num + col + 1000)).setText(new_text);
-                                    }
+                                for (int i = 0; i < max_num; i++) {
+                                    stateOfGame.all_notes.get(stateOfGame.all_notes.size() - 1)[row][i][Integer.parseInt(current_cell.getText().toString()) - 1] = 0;
+                                    stateOfGame.all_notes.get(stateOfGame.all_notes.size() - 1)[i][col][Integer.parseInt(current_cell.getText().toString()) - 1] = 0;
                                 }
-
                                 for (int i = (row / stateOfGame.cells.sqrt_2) * stateOfGame.cells.sqrt_2; i < (row / stateOfGame.cells.sqrt_2) * stateOfGame.cells.sqrt_2 + stateOfGame.cells.sqrt_2; i++) {
                                     for (int j = (col / stateOfGame.cells.sqrt) * stateOfGame.cells.sqrt; j < (col / stateOfGame.cells.sqrt) * stateOfGame.cells.sqrt + stateOfGame.cells.sqrt; j++) {
-                                        if (stateOfGame.table_notes[i][j][Arrays.binarySearch(chars, current_button.getText()) - 1] != 0) {
-                                            stateOfGame.previous_table_notes[i][j][Arrays.binarySearch(chars, current_button.getText()) - 1] = Arrays.binarySearch(chars, current_button.getText().toString());
-                                            stateOfGame.table_notes[i][j][Arrays.binarySearch(chars, current_button.getText()) - 1] = 0;
-                                            String new_text = "";
-                                            for (int k = 0; k < max_num; k++) {
-                                                new_text += chars[stateOfGame.table_notes[i][j][k]] + "  ";
-                                                if ((k + 1) % stateOfGame.cells.sqrt_2 == 0) {
-                                                    new_text += "\n";
-                                                }
-                                            }
-                                            ((TextView) (findViewById(R.id.fragmentContainerView3)).findViewById(i * max_num + j + 1000)).setText(new_text);
-                                        }
+                                        stateOfGame.all_notes.get(stateOfGame.all_notes.size() - 1)[i][j][Integer.parseInt(current_cell.getText().toString()) - 1] = 0;
                                     }
                                 }
-                            }
-                            //А это для режима заметок
-                            else {
+
+                                for(int i = 0; i < max_num; i++){
+                                    for(int j = 0; j < max_num; j++) {
+                                        String new_text = "";
+                                        for (int k = 0; k < max_num; k++) {
+                                            new_text += chars[stateOfGame.all_notes.get(stateOfGame.all_notes.size() - 1)[i][j][k]] + " ";
+                                            if ((k + 1) % stateOfGame.cells.sqrt_2 == 0) {
+                                                new_text += "\n";
+                                            }
+                                        }
+                                        ((TextView) findViewById(R.id.fragmentContainerView3).findViewById(i * max_num + j + 1000)).setText(new_text);
+                                    }
+                                }
+                                //А это для режима заметок
+                            }else {
                                 //Текущее поле теперь предыдущее
+                                stateOfGame.all_notes.add(new int[max_num][max_num][max_num]);
                                 for (int i = 0; i < max_num; i++) {
                                     for (int j = 0; j < max_num; j++) {
                                         for (int k = 0; k < max_num; k++) {
-                                            stateOfGame.previous_table_notes[i][j][k] = stateOfGame.table_notes[i][j][k];
+                                            stateOfGame.all_notes.get(stateOfGame.all_notes.size() - 1)[i][j][k] = stateOfGame.all_notes.get(stateOfGame.all_notes.size() - 2)[i][j][k];
                                         }
                                     }
                                 }
-                                if (stateOfGame.current_field[row][col] > 0) {
-                                    //если в ячейке была цифра, то она становится одной из заметок
-                                    stateOfGame.table_notes[row][col][stateOfGame.current_field[row][col] - 1] = stateOfGame.current_field[row][col];
+                                stateOfGame.all_fields.add(new int[max_num][max_num]);
+                                for(int i= 0; i < max_num; i++){
+                                    for(int j = 0; j < max_num; j++){
+                                        stateOfGame.all_fields.get(stateOfGame.all_fields.size() - 1)[i][j] = stateOfGame.all_fields.get(stateOfGame.all_fields.size() - 2)[i][j];
+                                    }
                                 }
+                                stateOfGame.all_fields.get(stateOfGame.all_fields.size() - 1)[row][col] = -1;
+
+                                if(stateOfGame.all_notes.get(stateOfGame.all_notes.size() - 1)[row][col][Integer.parseInt(current_button.getText().toString())-1] == 0) {
+                                    stateOfGame.all_notes.get(stateOfGame.all_notes.size() - 1)[row][col][Integer.parseInt(current_button.getText().toString()) - 1] = Integer.parseInt(current_button.getText().toString());
+                                }else{
+                                    stateOfGame.all_notes.get(stateOfGame.all_notes.size() - 1)[row][col][Integer.parseInt(current_button.getText().toString())-1] = 0;
+                                }
+
                                 for (int i = 0; i < max_num; i++) {
                                     for (int j = 0; j < max_num; j++) {
-                                        stateOfGame.previous_field[i][j] = stateOfGame.current_field[i][j];
+                                        if (stateOfGame.all_fields.get(stateOfGame.all_fields.size() - 1)[i][j] >= 0) {
+                                            ((TextView) findViewById(R.id.fragmentContainerView).findViewById(i * max_num + j + 626)).setText(chars[stateOfGame.all_fields.get(stateOfGame.all_fields.size() - 1)[i][j]]);
+                                        } else {
+                                            ((TextView) findViewById(R.id.fragmentContainerView).findViewById(i * max_num + j + 626)).setText("");
+                                        }
                                     }
                                 }
-                                //чтобы обозначить, что в ячейке не пусто, а написаны заметки
-                                stateOfGame.current_field[row][col] = -1;
 
-                                if (stateOfGame.table_notes[row][col][Integer.parseInt(current_button.getText().toString()) - 1] == 0) {
-                                    stateOfGame.table_notes[row][col][Integer.parseInt(current_button.getText().toString()) - 1] = Integer.parseInt(current_button.getText().toString());
-                                }
-                                //если цифра уже была в ячейке, она удаляется
-                                else {
-                                    stateOfGame.table_notes[row][col][Integer.parseInt(current_button.getText().toString()) - 1] = 0;
-                                }
-                                String new_text = "";
-                                for (int j = 0; j < max_num; j++) {
-                                    new_text += chars[stateOfGame.table_notes[row][col][j]] + "  ";
-                                    if ((j + 1) % stateOfGame.cells.sqrt_2 == 0) {
-                                        new_text += "\n";
+                                for(int i = 0; i < max_num; i++){
+                                    for(int j = 0; j < max_num; j++){
+                                        String new_text = "";
+                                        for(int k = 0; k < max_num; k++){
+                                            new_text += chars[stateOfGame.all_notes.get(stateOfGame.all_notes.size()-1)[i][j][k]] + "  ";
+                                            if ((k + 1) % stateOfGame.cells.sqrt_2 == 0) {
+                                                new_text += "\n";
+                                            }
+                                        }
+                                        ((TextView) findViewById(R.id.fragmentContainerView3).findViewById(i * max_num + j + 1000)).setText(new_text);
                                     }
                                 }
-                                ((TextView) (findViewById(R.id.fragmentContainerView3)).findViewById(row * max_num + col + 1000)).setText(new_text);
-                                ((TextView) (findViewById(R.id.fragmentContainerView)).findViewById(table_text[row][col])).setText("");
                             }
                             //посветка всех нужных ячеек
                             paint(buttons);
                         }
                         //Если пользователь правильно поставил все цифры, игра завершается победой
-                        if (Arrays.deepEquals(stateOfGame.current_field, stateOfGame.cells.field)) {
+                        if (Arrays.deepEquals(stateOfGame.all_fields.get(stateOfGame.all_fields.size()-1), stateOfGame.cells.field)) {
                             finish_game(getResources().getString(R.string.becauseofsuccess), getResources().getString(R.string.win),
                                     ((TextView) findViewById(R.id.header).findViewById(R.id.textView3)).getText().toString());
                         }
@@ -282,58 +259,45 @@ public class GameActivity extends FragmentActivity {
             @SuppressLint("ResourceType")
             @Override
             public void onClick(View view) {
-                for (int i = 0; i < max_num; i++) {
-                    for (int j = 0; j < max_num; j++) {
-                        //Если в ячейке что-то было, а теперь убираем, то надо зафиксировать, что количество цифр уменьшилось
-                        if (stateOfGame.current_field[i][j] > 0) {
-                            stateOfGame.filled_numbers[stateOfGame.current_field[i][j] - 1]--;
-                        }
-                        //А если после отмены действия что-то появляется, то этого становится больше
-                        if (stateOfGame.previous_field[i][j] > 0) {
-                            stateOfGame.filled_numbers[stateOfGame.previous_field[i][j] - 1]++;
-                        }
 
-                        //Пользователь мог ткнуть после того, как что-то написал, в другое рандомное место
-                        //Или могли измениться заметки сразу в нескольких ячейках, так что всю таблицку надо проверить на изменения
-                        if (stateOfGame.current_field[i][j] != stateOfGame.previous_field[i][j]) {
+                if(stateOfGame.all_fields.size() > 1) {
+                    stateOfGame.all_fields.remove(stateOfGame.all_fields.size() - 1);
 
-                            stateOfGame.current_field[i][j] = stateOfGame.previous_field[i][j];
-                            //Завершение игры при превышении лимита на ошибки
-                            if (stateOfGame.current_field[i][j] != stateOfGame.cells.field[i][j] && stateOfGame.current_field[i][j] > 0) {
+                    for (int i = 0; i < max_num; i++) {
+                        for (int j = 0; j < max_num; j++) {
+                            if (stateOfGame.all_fields.get(stateOfGame.all_fields.size() - 1)[i][j] >= 0) {
+                                ((TextView) findViewById(R.id.fragmentContainerView).findViewById(i * max_num + j + 626)).setText(chars[stateOfGame.all_fields.get(stateOfGame.all_fields.size() - 1)[i][j]]);
+                            } else {
+                                ((TextView) findViewById(R.id.fragmentContainerView).findViewById(i * max_num + j + 626)).setText("");
+                            }
+                            if (stateOfGame.all_fields.get(stateOfGame.all_fields.size() - 1)[i][j] != stateOfGame.cells.field[i][j]
+                                    && stateOfGame.all_fields.get(stateOfGame.all_fields.size() - 1)[i][j] > 0) {
                                 stateOfGame.mistakes++;
                                 if (stateOfGame.settings[7] && stateOfGame.mistakes >= stateOfGame.mistakes_limit) {
                                     finish_game(getResources().getString(R.string.becauseofmistakes), getResources().getString(R.string.gameover),
                                             ((TextView) findViewById(R.id.header).findViewById(R.id.textView3)).getText().toString());
                                 }
                             }
-
-                            //Если в новой ячейке не заметки, то надо поставить какую-то цифру, а если заметки, оставить пустой
-                            if (stateOfGame.previous_field[i][j] >= 0) {
-                                ((TextView) (findViewById(R.id.fragmentContainerView)).findViewById(table_text[i][j])).setText(chars[stateOfGame.previous_field[i][j]] + "");
-                            } else {
-                                ((TextView) (findViewById(R.id.fragmentContainerView)).findViewById(table_text[i][j])).setText("");
-                            }
-                            //Выбранная ячейка теперь та, которая изменилась
-                            current_cell = (findViewById(R.id.fragmentContainerView)).findViewById(table_text[i][j]);
                         }
-                        //Запоминаем состояние заметок
-                        for (int k = 0; k < max_num; k++) {
-                            if (stateOfGame.table_notes[i][j][k] != stateOfGame.previous_table_notes[i][j][k]) {
-                                stateOfGame.table_notes[i][j][k] = stateOfGame.previous_table_notes[i][j][k];
-                            }
-                        }
-
-                        //На ячейку для заметок ставится новый текст
-                        String new_text = "";
-                        for (int l = 0; l < max_num; l++) {
-                            new_text += chars[stateOfGame.table_notes[i][j][l]] + "  ";
-                            if ((l + 1) % stateOfGame.cells.sqrt_2 == 0) {
-                                new_text += "\n";
-                            }
-                        }
-                        ((TextView) (findViewById(R.id.fragmentContainerView3)).findViewById(i * max_num + j + 1000)).setText(new_text);
                     }
                 }
+
+                if(stateOfGame.all_notes.size() > 1){
+                    stateOfGame.all_notes.remove(stateOfGame.all_notes.size()-1);
+                    for(int i = 0; i < max_num; i++){
+                        for(int j = 0; j < max_num; j++){
+                            String new_text = "";
+                            for(int k = 0; k < max_num; k++){
+                                new_text += chars[stateOfGame.all_notes.get(stateOfGame.all_notes.size()-1)[i][j][k]] + "  ";
+                                if ((k + 1) % stateOfGame.cells.sqrt_2 == 0) {
+                                    new_text += "\n";
+                                }
+                            }
+                            ((TextView) findViewById(R.id.fragmentContainerView3).findViewById(i * max_num + j + 1000)).setText(new_text);
+                        }
+                    }
+                }
+
                 //Красим поле
                 paint(buttons);
             }
@@ -352,23 +316,34 @@ public class GameActivity extends FragmentActivity {
                         int col = (current_cell.getId() - 626) % max_num;
 
                         //Цифр, естественно, стало меньше
-                        if (stateOfGame.current_field[row][col] > 0) {
-                            stateOfGame.filled_numbers[stateOfGame.current_field[row][col] - 1]--;
+                        if (stateOfGame.all_fields.get(stateOfGame.all_fields.size()-1)[row][col] > 0) {
+                            stateOfGame.filled_numbers[stateOfGame.all_fields.get(stateOfGame.all_fields.size()-1)[row][col] - 1]--;
                         }
 
                         //Запоминаем состояние поля и меняем его
-                        stateOfGame.previous_field[row][col] = stateOfGame.current_field[row][col];
-                        if (stateOfGame.previous_field[row][col] > 0) {
-                            for (int i = 0; i < max_num; i++) {
-                                stateOfGame.previous_table_notes[row][col][i] = stateOfGame.table_notes[row][col][i];
+                        stateOfGame.all_fields.add(new int[max_num][max_num]);
+                        for(int j = 0; j < max_num; j++){
+                            for(int k = 0; k < max_num; k++){
+                                stateOfGame.all_fields.get(stateOfGame.all_fields.size()-1)[j][k] = stateOfGame.all_fields.get(stateOfGame.all_fields.size()-2)[j][k];
                             }
-                            stateOfGame.table_notes[row][col] = new int[max_num];
                         }
-                        stateOfGame.current_field[row][col] = 0;
-                        current_cell.setText("");
+                        stateOfGame.all_fields.get(stateOfGame.all_fields.size()-1)[row][col] = 0;
+                        ((TextView) (findViewById(R.id.fragmentContainerView).findViewById(row * max_num + col + 626))).setText("");
+
 
                         paint(buttons);
                         //Если были заметки, то их тоже стираем
+                        //Поскольку после того, как поставили цифры, состояние заметок тоже поменяетя, надо
+                        //его запомнить
+                        stateOfGame.all_notes.add(new int[max_num][max_num][max_num]);
+                        for (int i = 0; i < max_num; i++) {
+                            for (int j = 0; j < max_num; j++) {
+                                for (int k = 0; k < max_num; k++) {
+                                    stateOfGame.all_notes.get(stateOfGame.all_notes.size()-1)[i][j][k] = stateOfGame.all_notes.get(stateOfGame.all_notes.size()-2)[i][j][k];
+                                }
+                            }
+                        }
+                        stateOfGame.all_notes.get(stateOfGame.all_notes.size()-1)[row][col]= new int[max_num];
                         ((TextView) (findViewById(R.id.fragmentContainerView3).findViewById(row * max_num + col + 1000))).setText("");
                     }
                 }
@@ -387,19 +362,21 @@ public class GameActivity extends FragmentActivity {
             @Override
             public void onClick(View view) {
                 stateOfGame.hints++;
+                ((TextView) findViewById(R.id.header).findViewById(R.id.textView6)).setText(stateOfGame.hints+"");
+
                 //Если подсказок больше, чем можно, игра завершается
                 if (stateOfGame.settings[8] && stateOfGame.hints >= stateOfGame.hints_limit) {
                     finish_game(getResources().getString(R.string.becauseofhints), getResources().getString(R.string.gameover),
                             ((TextView) findViewById(R.id.header).findViewById(R.id.textView3)).getText().toString());
                 }
-                //Для того, чтобы дать подсказку, можео выбрать пустую яейку или ячейку с ошибкой
+                //Для того, чтобы дать подсказку, можно выбрать пустую ячейку или ячейку с ошибкой
                 ArrayList<TextView> empty_cells = new ArrayList<>();
                 ArrayList<TextView> wrong_cells = new ArrayList<>();
                 for (int i = 0; i < max_num; i++) {
                     for (int j = 0; j < max_num; j++) {
-                        if (stateOfGame.current_field[i][j] == 0) {
+                        if (stateOfGame.all_fields.get(stateOfGame.all_fields.size()-1)[i][j] == 0) {
                             empty_cells.add((findViewById(R.id.fragmentContainerView)).findViewById(table_text[i][j]));
-                        } else if (stateOfGame.current_field[i][j] != stateOfGame.cells.field[i][j]) {
+                        } else if (stateOfGame.all_fields.get(stateOfGame.all_fields.size()-1)[i][j] != stateOfGame.cells.field[i][j]) {
                             wrong_cells.add((findViewById(R.id.fragmentContainerView)).findViewById(table_text[i][j]));
                         }
                     }
@@ -413,70 +390,72 @@ public class GameActivity extends FragmentActivity {
                 }
                 //Тепрь выбранная ячейка та, где подсказка
                 current_cell = cell_for_hint;
+
                 //Дальше делается всё то же самое, что при вводе
                 int row = (cell_for_hint.getId() - 626) / max_num;
                 int col = (cell_for_hint.getId() - 626) % max_num;
-                stateOfGame.previous_field[row][col] = stateOfGame.current_field[row][col];
-                stateOfGame.current_field[row][col] = stateOfGame.cells.field[row][col];
-                cell_for_hint.setText(stateOfGame.cells.field[row][col] + "");
-                paint(buttons);
-                ((TextView) (findViewById(R.id.header)).findViewById(R.id.textView6)).setText("" + stateOfGame.hints);
-                if (!(Arrays.equals(stateOfGame.table_notes[row][col], new int[max_num]))) {
-                    for (int k = 0; k < max_num; k++) {
-                        if (stateOfGame.table_notes[row][col][k] != stateOfGame.previous_table_notes[row][col][k]) {
-                            stateOfGame.table_notes[row][col][k] = stateOfGame.previous_table_notes[row][col][k];
-                        }
-                    }
-                    stateOfGame.table_notes[row][col] = new int[max_num];
-                    ((TextView) (findViewById(R.id.fragmentContainerView3)).findViewById(row * max_num + col + 1000)).setText("");
+
+                //Цифр, которые такие же, как выбранная, становится больше
+                stateOfGame.filled_numbers[stateOfGame.cells.field[row][col] - 1]++;
+
+                //Если в ячейке что-то было, этого становится меньше
+                if (stateOfGame.all_fields.get(stateOfGame.all_fields.size()-1)[row][col] > 0) {
+                    stateOfGame.filled_numbers[stateOfGame.all_fields.get(stateOfGame.all_fields.size()-1)[row][col] - 1]--;
                 }
-                for (int j = 0; j < max_num; j++) {
-                    if (stateOfGame.table_notes[row][j][stateOfGame.cells.field[row][col] - 1] != 0) {
-                        stateOfGame.previous_table_notes[row][j][stateOfGame.cells.field[row][col] - 1] = stateOfGame.cells.field[row][col];
-                        stateOfGame.table_notes[row][j][stateOfGame.cells.field[row][col] - 1] = 0;
-                        String new_text = "";
-                        for (int k = 0; k < max_num; k++) {
-                            new_text += chars[stateOfGame.table_notes[row][j][k]] + "  ";
-                            if ((k + 1) % stateOfGame.cells.sqrt_2 == 0) {
-                                new_text += "\n";
-                            }
-                        }
-                        ((TextView) (findViewById(R.id.fragmentContainerView3)).findViewById(row * max_num + j + 1000)).setText(new_text);
+
+                //Собственно ставим цифру
+                current_cell.setText(chars[stateOfGame.cells.field[row][col]]);
+
+                stateOfGame.all_fields.add(new int[max_num][max_num]);
+                for(int j = 0; j < max_num; j++){
+                    for(int k = 0; k < max_num; k++){
+                        stateOfGame.all_fields.get(stateOfGame.all_fields.size()-1)[j][k] = stateOfGame.all_fields.get(stateOfGame.all_fields.size()-2)[j][k];
                     }
-                    if (stateOfGame.table_notes[j][col][stateOfGame.cells.field[row][col] - 1] != 0) {
-                        stateOfGame.previous_table_notes[j][col][stateOfGame.cells.field[row][col] - 1] = stateOfGame.cells.field[row][col];
-                        stateOfGame.table_notes[j][col][stateOfGame.cells.field[row][col] - 1] = 0;
-                        String new_text = "";
+                }
+
+                stateOfGame.all_fields.get(stateOfGame.all_fields.size()-1)[row][col] = stateOfGame.cells.field[row][col];
+
+                stateOfGame.all_notes.add(new int[max_num][max_num][max_num]);
+                for (int i = 0; i < max_num; i++) {
+                    for (int j = 0; j < max_num; j++) {
                         for (int k = 0; k < max_num; k++) {
-                            new_text += chars[stateOfGame.table_notes[j][col][k]] + "  ";
-                            if ((k + 1) % stateOfGame.cells.sqrt_2 == 0) {
-                                new_text += "\n";
-                            }
+                            stateOfGame.all_notes.get(stateOfGame.all_notes.size() - 1)[i][j][k] = stateOfGame.all_notes.get(stateOfGame.all_notes.size() - 2)[i][j][k];
                         }
-                        ((TextView) (findViewById(R.id.fragmentContainerView3)).findViewById(j * max_num + col + 1000)).setText(new_text);
                     }
+                }
+
+                stateOfGame.all_notes.get(stateOfGame.all_notes.size() - 1)[row][col] = new int[max_num];
+
+                for (int i = 0; i < max_num; i++) {
+                    stateOfGame.all_notes.get(stateOfGame.all_notes.size() - 1)[row][i][Integer.parseInt(current_cell.getText().toString()) - 1] = 0;
+                    stateOfGame.all_notes.get(stateOfGame.all_notes.size() - 1)[i][col][Integer.parseInt(current_cell.getText().toString()) - 1] = 0;
                 }
                 for (int i = (row / stateOfGame.cells.sqrt_2) * stateOfGame.cells.sqrt_2; i < (row / stateOfGame.cells.sqrt_2) * stateOfGame.cells.sqrt_2 + stateOfGame.cells.sqrt_2; i++) {
                     for (int j = (col / stateOfGame.cells.sqrt) * stateOfGame.cells.sqrt; j < (col / stateOfGame.cells.sqrt) * stateOfGame.cells.sqrt + stateOfGame.cells.sqrt; j++) {
-                        if (stateOfGame.table_notes[i][j][stateOfGame.cells.field[row][col] - 1] != 0) {
-                            stateOfGame.previous_table_notes[i][j][stateOfGame.cells.field[row][col] - 1] = stateOfGame.cells.field[row][col];
-
-                            stateOfGame.table_notes[i][j][stateOfGame.cells.field[row][col] - 1] = 0;
-                            String new_text = "";
-                            for (int k = 0; k < max_num; k++) {
-                                new_text += chars[stateOfGame.table_notes[i][j][k]] + "  ";
-                                if ((k + 1) % stateOfGame.cells.sqrt_2 == 0) {
-                                    new_text += "\n";
-                                }
-                            }
-                            ((TextView) (findViewById(R.id.fragmentContainerView3)).findViewById(i * max_num + j + 1000)).setText(new_text);
-                        }
+                        stateOfGame.all_notes.get(stateOfGame.all_notes.size() - 1)[i][j][Integer.parseInt(current_cell.getText().toString()) - 1] = 0;
                     }
                 }
-                if (Arrays.deepEquals(stateOfGame.current_field, stateOfGame.cells.field)) {
+
+                stateOfGame.all_notes.get(stateOfGame.all_notes.size()-1)[row][col] = new int[max_num];
+
+                for(int i = 0; i < max_num; i++){
+                    for(int j = 0; j < max_num; j++){
+                        String new_text = "";
+                        for(int k = 0; k < max_num; k++){
+                            new_text += chars[stateOfGame.all_notes.get(stateOfGame.all_notes.size() - 1)[i][j][k]]+" ";
+                            if((k+1) % stateOfGame.cells.sqrt_2 == 0){
+                                new_text+="\n";
+                            }
+                        }
+                        ((TextView) findViewById(R.id.fragmentContainerView3).findViewById(i*max_num + j + 1000)).setText(new_text);
+                    }
+                }
+
+                if (Arrays.deepEquals(stateOfGame.all_fields.get(stateOfGame.all_fields.size()-1), stateOfGame.cells.field)) {
                     finish_game(getResources().getString(R.string.becauseofsuccess), getResources().getString(R.string.win),
                             ((TextView) findViewById(R.id.header).findViewById(R.id.textView3)).getText().toString());
                 }
+                paint(buttons);
             }
         });
 
