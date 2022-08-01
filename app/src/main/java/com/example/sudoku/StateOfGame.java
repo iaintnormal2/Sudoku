@@ -29,7 +29,7 @@ public class StateOfGame {
 
     //Установленные пользователем значения настроек
     //Они расставлены в том же порядке, в каком кнопки на экране настроек
-    public boolean[] settings = {true, true, true, true, true, true, false, false, false};
+    public boolean[] settings = {true, true, true, true, true, true, false, false, false, true, false};
 
     //Ограничения на ошибки, подсказки и время игры
     public long time_limit = 0;

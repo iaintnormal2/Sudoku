@@ -4,7 +4,6 @@ import static com.example.sudoku.MainActivity.stateOfGame;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -27,9 +26,9 @@ public class SettingsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_settings);
 
         int[] switches = {R.id.switch1, R.id.switch2, R.id.switch3, R.id.switch4, R.id.switch5,
-        R.id.switch6, R.id.switch7, R.id.switch8, R.id.switch9};
+        R.id.switch6, R.id.switch7, R.id.switch8, R.id.switch9, R.id.switch12};
 
-        for(int i = 0; i < 9; i++){
+        for(int i = 0; i < 10; i++){
             findViewById(switches[i]).setId(i*10000000);
             ((Switch) findViewById(i*10000000)).setChecked(stateOfGame.settings[i]);
             findViewById(i*10000000).setOnClickListener(new View.OnClickListener() {
@@ -40,6 +39,32 @@ public class SettingsActivity extends AppCompatActivity {
                 }
             });
         }
+
+        Switch mode_1 = findViewById(R.id.switch10);
+        Switch mode_2 = findViewById(R.id.switch11);
+        if(!stateOfGame.settings[10]){
+            mode_1.setChecked(true);
+            mode_2.setChecked(false);
+        }else{
+            mode_1.setChecked(false);
+            mode_2.setChecked(true);
+        }
+
+        mode_1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mode_2.setChecked(!mode_2.isChecked());
+                stateOfGame.settings[10] = !stateOfGame.settings[10];
+            }
+        });
+
+        mode_2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mode_1.setChecked(!mode_1.isChecked());
+                stateOfGame.settings[10] = !stateOfGame.settings[10];
+            }
+        });
 
         if(stateOfGame.settings[6]) {
             time_limit_seconds = findViewById(R.id.editTextNumber2);
@@ -98,7 +123,6 @@ public class SettingsActivity extends AppCompatActivity {
                 }
                 try{
                     stateOfGame.hints_limit = Integer.parseInt(((TextView) findViewById(R.id.editTextNumber5)).getText().toString());
-                    Log.e("wtf", Integer.parseInt(((TextView) findViewById(R.id.editTextNumber5)).getText().toString())+"");
                 }catch(NumberFormatException e){
                     if(stateOfGame.settings[8]){
                         Toast.makeText(getApplicationContext(), R.string.error3, Toast.LENGTH_SHORT).show();

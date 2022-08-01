@@ -4,7 +4,6 @@ import static com.example.sudoku.MainActivity.stateOfGame;
 
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -180,7 +179,6 @@ public class NoteFieldFragment extends Fragment {
         for(int i = 0; i < stateOfGame.all_notes.size(); i++){
             for(int j = 0; j < stateOfGame.all_notes.get(i).length; j++){
                 for(int k = 0; k < stateOfGame.all_notes.get(i)[j].length; k++){
-                    Log.e("indexes", i+" "+j+" "+k);
                     savedInstanceState.putIntArray("notes"+i+j+k, stateOfGame.all_notes.get(i)[j][k]);
                 }
             }
