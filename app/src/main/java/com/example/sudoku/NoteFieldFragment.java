@@ -78,7 +78,11 @@ public class NoteFieldFragment extends Fragment {
                         little_square.setHeight(cell_size);
                         little_square.setWidth(cell_size);
                         little_square.setId((k + stateOfGame.cells.sqrt_2 * i) * max_num + l + stateOfGame.cells.sqrt * j + 1000);
-                        little_square.setTextSize(text_size/stateOfGame.cells.sqrt_2);
+                        if(stateOfGame.chars_mode == 0){
+                            little_square.setTextSize(text_size/stateOfGame.cells.sqrt_2);
+                        }else{
+                            little_square.setTextSize(text_size/stateOfGame.cells.sqrt_2/1.5f);
+                        }
                         little_square.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
                         little_square.setTextColor(getResources().getColor(R.color.gray));
 
@@ -194,5 +198,27 @@ public class NoteFieldFragment extends Fragment {
             }
         }
         savedInstanceState.putInt("changes", stateOfGame.all_notes.size());
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        for(int i = 0; i < max_num; i++){
+            for(int j = 0; j < max_num; j++){
+                if(stateOfGame.chars_mode == 0){
+                    ((TextView) getView().findViewById(i*max_num+j+1000)).setTextSize(text_size/stateOfGame.cells.sqrt_2);
+                }else{
+                    ((TextView) getView().findViewById(i*max_num+j+1000)).setTextSize(text_size/stateOfGame.cells.sqrt_2/1.5f);
+                }
+                String text = "";
+                for(int m = 0; m < max_num; m++){
+                    text += chars[stateOfGame.chars_mode][stateOfGame.all_notes.get(stateOfGame.all_notes.size() - 1)[i][j][m]]+"  ";
+                    if((m+1)% stateOfGame.cells.sqrt_2 == 0){
+                        text+="\n";
+                    }
+                }
+                ((TextView) getView().findViewById(i*max_num+j+1000)).setText(text);
+            }
+        }
     }
 }

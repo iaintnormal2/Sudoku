@@ -184,6 +184,7 @@
                     android:inputType="number"
                     android:maxLength="3"
                     android:textAlignment="center"
+                    android:textColor="@color/white"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/textView8"
                     app:layout_constraintStart_toStartOf="parent"

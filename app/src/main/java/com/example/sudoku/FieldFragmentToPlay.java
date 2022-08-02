@@ -256,7 +256,7 @@ public class FieldFragmentToPlay extends Fragment {
                                                 stateOfGame.all_fields.get(stateOfGame.all_fields.size() - 1)[row][col] = -1;
 
                                                 if (stateOfGame.all_notes.get(stateOfGame.all_notes.size() - 1)[row][col][Arrays.binarySearch(chars[stateOfGame.chars_mode], current_button.getText().toString())-1] == 0) {
-                                                    stateOfGame.all_notes.get(stateOfGame.all_notes.size() - 1)[row][col][Arrays.binarySearch(chars[stateOfGame.chars_mode], current_button.getText().toString())-1] = Arrays.binarySearch(chars, current_button.getText().toString());
+                                                    stateOfGame.all_notes.get(stateOfGame.all_notes.size() - 1)[row][col][Arrays.binarySearch(chars[stateOfGame.chars_mode], current_button.getText().toString())-1] = Arrays.binarySearch(chars[stateOfGame.chars_mode], current_button.getText().toString());
                                                 } else {
                                                     stateOfGame.all_notes.get(stateOfGame.all_notes.size() - 1)[row][col][Arrays.binarySearch(chars[stateOfGame.chars_mode], current_button.getText().toString())-1] = 0;
                                                 }
@@ -454,6 +454,18 @@ public class FieldFragmentToPlay extends Fragment {
             getActivity().finish();
         }catch (Exception e){
             e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        for(int i = 0; i < max_num; i++){
+            for(int j = 0; j < max_num; j++){
+                if(stateOfGame.all_fields.get(stateOfGame.all_fields.size()-1)[i][j] >= 0) {
+                    ((TextView) getView().findViewById(table_text[i][j])).setText(chars[stateOfGame.chars_mode][stateOfGame.all_fields.get(stateOfGame.all_fields.size()-1)[i][j]]);
+                }
+            }
         }
     }
 }

@@ -621,5 +621,8 @@ public class GameActivity extends FragmentActivity {
                 ((TextView) findViewById(buttons[i])).setTextColor(getResources().getColor(R.color.white));
             }
         }
+        for (int i = 0; i < max_num; i++) {
+            ((Button) findViewById(buttons[i])).setText(chars[stateOfGame.chars_mode][i + 1]);
+        }
     }
 }
