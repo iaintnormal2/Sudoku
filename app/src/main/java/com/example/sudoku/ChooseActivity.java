@@ -4,6 +4,7 @@ import static com.example.sudoku.MainActivity.stateOfGame;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -22,6 +23,12 @@ public class ChooseActivity extends AppCompatActivity {
         super.onCreate(SavedInstanceState);
 
         setContentView(R.layout.activity_choose);
+
+        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
+            (findViewById(R.id.layout_5)).setBackground(getResources().getDrawable(R.drawable.background));
+        }else{
+            (findViewById(R.id.layout_5)).setBackground(getResources().getDrawable(R.drawable.background_land));
+        }
 
         //Из предыдущей активности получаем тип игры
         Intent i = getIntent();
@@ -59,21 +66,10 @@ public class ChooseActivity extends AppCompatActivity {
                             default:
                                 stateOfGame.level = 0.1;
                         }
-                        //Проверяем, будут ли ячейки окрашены тем или иным образом
-                        //Как только это становится понятно, уровень можно передавать следующей активности
-                        for (int i = 0; i < types.length; i++) {
-                            if (types[i] == 1) {
-                                j.putExtra("level", stateOfGame.level - 0.1);
-                                j.putExtra("max_num", max_num);
-                                break;
-                            }
-                            //Если да, то заполнить надо меньше ячеек
-                            else if (i > 0) {
-                                j.putExtra("level", stateOfGame.level);
-                                j.putExtra("max_num", max_num);
-                                break;
-                            }
-                        }
+
+                        j.putExtra("level", stateOfGame.level);
+                        j.putExtra("max_num", max_num);
+
                         //Теперь можно решить, где какие цифры ставить, и запустить игру
                         stateOfGame.cells = new Table(max_num, stateOfGame.level);
 
@@ -176,5 +172,15 @@ public class ChooseActivity extends AppCompatActivity {
         minus.setOnClickListener(listener_minus);
         Button plus = findViewById(R.id.button9);
         plus.setOnClickListener(listener_plus);
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig){
+        super.onConfigurationChanged(newConfig);
+        if(newConfig.orientation == Configuration.ORIENTATION_PORTRAIT){
+            (findViewById(R.id.layout_5)).setBackground(getResources().getDrawable(R.drawable.background));
+        }else{
+            (findViewById(R.id.layout_5)).setBackground(getResources().getDrawable(R.drawable.background_land));
+        }
     }
 }

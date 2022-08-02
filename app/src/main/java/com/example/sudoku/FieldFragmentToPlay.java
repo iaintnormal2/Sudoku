@@ -34,8 +34,17 @@ public class FieldFragmentToPlay extends Fragment {
     public static int[][] table_text;
 
     //Если возможных цифр больше 9, двузначные надо заменить на буквы, а нули заменяются на пустое место
-    public static String[] chars= {"  ", "1", "2", "3", "4", "5", "6", "7", "8", "9",
-            "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P"};
+    public static String[][] chars= {{"  ", "1", "2", "3", "4", "5", "6", "7", "8", "9",
+            "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P"},
+            {"  ", "☀️", "☁️", "⚡️", "✨", "⭐️", "🌈", "🌑", "🌒", "🌓", "🌔", "🌕", "🌖", "🌗",
+                    "🌘", "🌙", "🌚", "🌛", "🌜", "🌝", "🌞", "🌟", "🌤", "💦", "💧", "💫"},
+            {"  ", "🌰", "🍇", "🍉", "🍊", "🍎", "🍏", "🍐", "🍒", "🍓", "🍦", "🍨", "🍩", "🍪", "🍫", "🍬",
+                    "🍭", "🍮", "🍯", "🍰", "🍿", "🎂", "🥐", "🥜", "🥧", "🥨"},
+            {"  ", "⌚️", "⌨️", "⚙️", "🎙", "💡", "💻", "💽", "💾", "💿", "📀", "📞", "📱", "📲",
+                    "📷", "📸", "📹", "📻", "📼", "🔋", "🔌", "🔧", "🔩", "🕹", "🖥", "🖨", "🖱"},
+            {"  ", "π", "⇒", "∀", "∃", "∏", "∑", "√", "∞", "∫", "≠", "⋮", "⌀", "△", "✖️", "❕",
+                    "➕", "➖", "➗", "⬆️", "🅰️", "🅱️", "📏", "📐", "📚", "📝"}
+    };
 
     int max_num = stateOfGame.max_num;
 
@@ -99,7 +108,7 @@ public class FieldFragmentToPlay extends Fragment {
                         }
                         //Установка текста
                         if(stateOfGame.all_fields.get(stateOfGame.all_fields.size()-1)[row][col] >= 0) {
-                            cell.setText(chars[stateOfGame.all_fields.get(stateOfGame.all_fields.size()-1)[row][col]]);
+                            cell.setText(chars[stateOfGame.chars_mode][stateOfGame.all_fields.get(stateOfGame.all_fields.size()-1)[row][col]]);
                         }
                         little_row.addView(cell);
 
@@ -121,7 +130,7 @@ public class FieldFragmentToPlay extends Fragment {
                                             if (!stateOfGame.note_mode) {
 
                                                 //Цифр, которые такие же, как выбранная, становится больше
-                                                stateOfGame.filled_numbers[Arrays.binarySearch(chars, current_button.getText().toString()) - 1]++;
+                                                stateOfGame.filled_numbers[Arrays.binarySearch(chars[stateOfGame.chars_mode], current_button.getText().toString()) - 1]++;
 
                                                 //Если в ячейке что-то было, этого становится меньше
                                                 if (stateOfGame.all_fields.get(stateOfGame.all_fields.size() - 1)[row][col] > 0) {
@@ -138,7 +147,7 @@ public class FieldFragmentToPlay extends Fragment {
                                                     }
                                                 }
 
-                                                stateOfGame.all_fields.get(stateOfGame.all_fields.size() - 1)[row][col] = Arrays.binarySearch(chars, current_button.getText().toString());
+                                                stateOfGame.all_fields.get(stateOfGame.all_fields.size() - 1)[row][col] = Arrays.binarySearch(chars[stateOfGame.chars_mode], current_button.getText().toString());
 
                                                 boolean is_mistake = false;
                                                 boolean has_zero = false;
@@ -176,7 +185,11 @@ public class FieldFragmentToPlay extends Fragment {
                                                             }
                                                             //А если заполнил поле по правилам, то выигрывает
                                                             if (i == (row / stateOfGame.cells.sqrt_2) * stateOfGame.cells.sqrt_2 + stateOfGame.cells.sqrt_2 - 1 && j == (col / stateOfGame.cells.sqrt) * stateOfGame.cells.sqrt + stateOfGame.cells.sqrt - 1 && !has_zero) {
-                                                                finish_game(getResources().getString(R.string.becauseofsuccess), getResources().getString(R.string.win), ((TextView) view.findViewById(R.id.textView3)).getText().toString());
+                                                                try {
+                                                                    finish_game(getResources().getString(R.string.becauseofsuccess), getResources().getString(R.string.win), ((TextView) getActivity().findViewById(R.id.header).findViewById(R.id.textView3)).getText().toString());
+                                                                }catch (Exception e){
+                                                                    e.printStackTrace();
+                                                                }
                                                             }
                                                         }
                                                         if (is_mistake) {
@@ -186,7 +199,7 @@ public class FieldFragmentToPlay extends Fragment {
                                                 }
                                                 if (stateOfGame.settings[7] && stateOfGame.mistakes >= stateOfGame.mistakes_limit) {
                                                     finish_game(getResources().getString(R.string.becauseofmistakes), getResources().getString(R.string.gameover),
-                                                            ((TextView) view.findViewById(R.id.textView3)).getText().toString());
+                                                            ((TextView) getActivity().findViewById(R.id.header).findViewById(R.id.textView3)).getText().toString());
                                                 }
 
                                                 stateOfGame.all_notes.add(new int[max_num][max_num][max_num]);
@@ -202,12 +215,12 @@ public class FieldFragmentToPlay extends Fragment {
 
                                                 if(stateOfGame.settings[9]) {
                                                     for (int i = 0; i < max_num; i++) {
-                                                        stateOfGame.all_notes.get(stateOfGame.all_notes.size() - 1)[row][i][Arrays.binarySearch(chars, current_cell.getText().toString()) - 1] = 0;
-                                                        stateOfGame.all_notes.get(stateOfGame.all_notes.size() - 1)[i][col][Arrays.binarySearch(chars, current_cell.getText().toString())-1] = 0;
+                                                        stateOfGame.all_notes.get(stateOfGame.all_notes.size() - 1)[row][i][Arrays.binarySearch(chars[stateOfGame.chars_mode], current_cell.getText().toString()) - 1] = 0;
+                                                        stateOfGame.all_notes.get(stateOfGame.all_notes.size() - 1)[i][col][Arrays.binarySearch(chars[stateOfGame.chars_mode], current_cell.getText().toString())-1] = 0;
                                                     }
                                                     for (int i = (row / stateOfGame.cells.sqrt_2) * stateOfGame.cells.sqrt_2; i < (row / stateOfGame.cells.sqrt_2) * stateOfGame.cells.sqrt_2 + stateOfGame.cells.sqrt_2; i++) {
                                                         for (int j = (col / stateOfGame.cells.sqrt) * stateOfGame.cells.sqrt; j < (col / stateOfGame.cells.sqrt) * stateOfGame.cells.sqrt + stateOfGame.cells.sqrt; j++) {
-                                                            stateOfGame.all_notes.get(stateOfGame.all_notes.size() - 1)[i][j][Arrays.binarySearch(chars, current_cell.getText().toString())-1] = 0;
+                                                            stateOfGame.all_notes.get(stateOfGame.all_notes.size() - 1)[i][j][Arrays.binarySearch(chars[stateOfGame.chars_mode], current_cell.getText().toString())-1] = 0;
                                                         }
                                                     }
                                                 }
@@ -215,7 +228,7 @@ public class FieldFragmentToPlay extends Fragment {
                                                     for (int j = 0; j < max_num; j++) {
                                                         String new_text = "";
                                                         for (int k = 0; k < max_num; k++) {
-                                                            new_text += chars[stateOfGame.all_notes.get(stateOfGame.all_notes.size() - 1)[i][j][k]] + "  ";
+                                                            new_text += chars[stateOfGame.chars_mode][stateOfGame.all_notes.get(stateOfGame.all_notes.size() - 1)[i][j][k]] + "  ";
                                                             if ((k + 1) % stateOfGame.cells.sqrt_2 == 0) {
                                                                 new_text += "\n";
                                                             }
@@ -242,16 +255,16 @@ public class FieldFragmentToPlay extends Fragment {
                                                 }
                                                 stateOfGame.all_fields.get(stateOfGame.all_fields.size() - 1)[row][col] = -1;
 
-                                                if (stateOfGame.all_notes.get(stateOfGame.all_notes.size() - 1)[row][col][Arrays.binarySearch(chars, current_button.getText().toString())-1] == 0) {
-                                                    stateOfGame.all_notes.get(stateOfGame.all_notes.size() - 1)[row][col][Arrays.binarySearch(chars, current_button.getText().toString())-1] = Arrays.binarySearch(chars, current_button.getText().toString());
+                                                if (stateOfGame.all_notes.get(stateOfGame.all_notes.size() - 1)[row][col][Arrays.binarySearch(chars[stateOfGame.chars_mode], current_button.getText().toString())-1] == 0) {
+                                                    stateOfGame.all_notes.get(stateOfGame.all_notes.size() - 1)[row][col][Arrays.binarySearch(chars[stateOfGame.chars_mode], current_button.getText().toString())-1] = Arrays.binarySearch(chars, current_button.getText().toString());
                                                 } else {
-                                                    stateOfGame.all_notes.get(stateOfGame.all_notes.size() - 1)[row][col][Arrays.binarySearch(chars, current_button.getText().toString())-1] = 0;
+                                                    stateOfGame.all_notes.get(stateOfGame.all_notes.size() - 1)[row][col][Arrays.binarySearch(chars[stateOfGame.chars_mode], current_button.getText().toString())-1] = 0;
                                                 }
 
                                                 for (int i = 0; i < max_num; i++) {
                                                     for (int j = 0; j < max_num; j++) {
                                                         if (stateOfGame.all_fields.get(stateOfGame.all_fields.size() - 1)[i][j] >= 0) {
-                                                            ((TextView) view.findViewById(i * max_num + j + 626)).setText(chars[stateOfGame.all_fields.get(stateOfGame.all_fields.size() - 1)[i][j]]);
+                                                            ((TextView) view.findViewById(i * max_num + j + 626)).setText(chars[stateOfGame.chars_mode][stateOfGame.all_fields.get(stateOfGame.all_fields.size() - 1)[i][j]]);
                                                         } else {
                                                             ((TextView) view.findViewById(i * max_num + j + 626)).setText("");
                                                         }
@@ -262,7 +275,7 @@ public class FieldFragmentToPlay extends Fragment {
                                                     for (int j = 0; j < max_num; j++) {
                                                         String new_text = "";
                                                         for (int k = 0; k < max_num; k++) {
-                                                            new_text += chars[stateOfGame.all_notes.get(stateOfGame.all_notes.size() - 1)[i][j][k]] + "  ";
+                                                            new_text += chars[stateOfGame.chars_mode][stateOfGame.all_notes.get(stateOfGame.all_notes.size() - 1)[i][j][k]] + "  ";
                                                             if ((k + 1) % stateOfGame.cells.sqrt_2 == 0) {
                                                                 new_text += "\n";
                                                             }
@@ -317,11 +330,6 @@ public class FieldFragmentToPlay extends Fragment {
                                             Toast.makeText(getContext(), R.string.already_filled, Toast.LENGTH_LONG).show();
                                         }
                                     }
-                                    //Если пользователь правильно поставил все цифры, игра завершается победой
-                                    if (Arrays.deepEquals(stateOfGame.all_fields.get(stateOfGame.all_fields.size() - 1), stateOfGame.cells.field)) {
-                                        finish_game(getResources().getString(R.string.becauseofsuccess), getResources().getString(R.string.win),
-                                                ((TextView) getActivity().findViewById(R.id.header).findViewById(R.id.textView3)).getText().toString());
-                                    }
                                 }
                                 //Убираем окраску всех ячеек
                                 for(int i = 0; i < max_num; i++){
@@ -351,14 +359,50 @@ public class FieldFragmentToPlay extends Fragment {
                                         }
                                     }
                                 }
+                                boolean is_mistake = false;
                                 //если в ячейке правильная цифра, она пустая или подсвечивать ошибки не нужно, подсвечиваем синим
-                                if (Arrays.binarySearch(chars, current_cell.getText().toString()) == stateOfGame.cells.field[row][col] || !stateOfGame.settings[2]
+                                for (int i = 0; i < max_num; i++) {
+                                    if (stateOfGame.all_fields.get(stateOfGame.all_fields.size() - 1)[i][col] == stateOfGame.all_fields.get(stateOfGame.all_fields.size() - 1)[row][col] && i != row) {
+                                        is_mistake = true;
+                                        break;
+                                    }
+                                    if (stateOfGame.all_fields.get(stateOfGame.all_fields.size() - 1)[row][i] == stateOfGame.all_fields.get(stateOfGame.all_fields.size() - 1)[row][col] && i != col) {
+                                        is_mistake = true;
+                                        break;
+                                    }
+                                }
+                                if (!is_mistake) {
+                                    for (int i = (row / stateOfGame.cells.sqrt_2) * stateOfGame.cells.sqrt_2; i < (row / stateOfGame.cells.sqrt_2) * stateOfGame.cells.sqrt_2 + stateOfGame.cells.sqrt_2; i++) {
+                                        for (int j = (col / stateOfGame.cells.sqrt) * stateOfGame.cells.sqrt; j < (col / stateOfGame.cells.sqrt) * stateOfGame.cells.sqrt + stateOfGame.cells.sqrt; j++) {
+                                            if (i != row && j != col && stateOfGame.all_fields.get(stateOfGame.all_fields.size() - 1)[i][j] == stateOfGame.all_fields.get(stateOfGame.all_fields.size() - 1)[row][col]) {
+                                                is_mistake = true;
+                                                break;
+                                            }
+                                        }
+                                        if (is_mistake) {
+                                            break;
+                                        }
+                                    }
+                                }
+                                if (!is_mistake || !stateOfGame.settings[2]
                                         || stateOfGame.all_fields.get(stateOfGame.all_fields.size()-1)[row][col] <= 0) {
                                     cell.setBackgroundColor(getResources().getColor(R.color.transparent_light_blue));
                                 }
                                 // если цифра неправильная, то подсвечиваем красным
                                 else {
                                     cell.setBackgroundColor(getResources().getColor(R.color.transparent_red));
+                                    ((TextView) (getActivity().findViewById(R.id.header)).findViewById(R.id.textView4)).setText(stateOfGame.mistakes + "");
+                                }
+                                //если какую-то цифру больше не потребуется ставить, то кнопку, на которой она написана, нужно убрать,
+                                //а если она сначала закончилась, а теперь снова нужна, тогда наоборот
+                                for (int i = 0; i < stateOfGame.filled_numbers.length; i++) {
+                                    if (stateOfGame.filled_numbers[i] >= max_num) {
+                                        getActivity().findViewById(buttons[i]).setClickable(false);
+                                        getActivity().findViewById(buttons[i]).setVisibility(View.INVISIBLE);
+                                    } else {
+                                        getActivity().findViewById(buttons[i]).setClickable(true);
+                                        getActivity().findViewById(buttons[i]).setVisibility(View.VISIBLE);
+                                    }
                                 }
                             }
                         });
@@ -398,14 +442,18 @@ public class FieldFragmentToPlay extends Fragment {
     }
 
     public void finish_game(String reason, String result, String time){
-        Intent intent = new Intent(getContext(), endActivity.class);
-        //Передача информации о результатах игры
-        intent.putExtra("time", getResources().getString(R.string.time) + time);
-        intent.putExtra("mistakes", getResources().getString(R.string.mistakes) + stateOfGame.mistakes);
-        intent.putExtra("hints", getResources().getString(R.string.hints) + stateOfGame.hints);
-        intent.putExtra("reason", reason);
-        intent.putExtra("result", result);
-        startActivity(intent);
-        getActivity().finish();
+        try {
+            Intent intent = new Intent(getActivity(), endActivity.class);
+            //Передача информации о результатах игры
+            intent.putExtra("time", getResources().getString(R.string.time) + time);
+            intent.putExtra("mistakes", getResources().getString(R.string.mistakes) + stateOfGame.mistakes);
+            intent.putExtra("hints", getResources().getString(R.string.hints) + stateOfGame.hints);
+            intent.putExtra("reason", reason);
+            intent.putExtra("result", result);
+            startActivity(intent);
+            getActivity().finish();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 }

@@ -4,6 +4,7 @@ import static com.example.sudoku.MainActivity.stateOfGame;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -34,6 +35,7 @@ public class endActivity extends AppCompatActivity {
         //Если игра завершилась неудачно, то даём пользователю второй шанс
         Button retry = findViewById(R.id.button10);
         if(i.getStringExtra("result").equals(getResources().getString(R.string.gameover))) {
+
             retry.setVisibility(View.VISIBLE);
             retry.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -58,6 +60,8 @@ public class endActivity extends AppCompatActivity {
                     stateOfGame.all_notes.add(new int[stateOfGame.max_num][stateOfGame.max_num][stateOfGame.max_num]);
                     stateOfGame.all_notes.add(new int[stateOfGame.max_num][stateOfGame.max_num][stateOfGame.max_num]);
 
+                    stateOfGame.filled_numbers = new int[stateOfGame.max_num];
+
                     startActivity(intent);
                     finish();
                 }
@@ -73,6 +77,7 @@ public class endActivity extends AppCompatActivity {
         stateOfGame.mistakes = 0;
         stateOfGame.hints = 0;
         stateOfGame.seconds = 0;
+        stateOfGame.filled_numbers = new int[stateOfGame.max_num];
         try{
             Gson gson = new Gson();
             OutputStreamWriter outputStreamWriter = new OutputStreamWriter(openFileOutput("GameState.json", Context.MODE_PRIVATE));

@@ -48,4 +48,7 @@ public class StateOfGame {
 
     //Все состояния заметок
     ArrayList<int[][][]> all_notes = new ArrayList<>();
+
+    //Чем заполнять поле
+    int chars_mode = 0;
 }

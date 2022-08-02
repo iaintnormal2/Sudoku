@@ -55,9 +55,22 @@
         <entry key="..\:/AndroidStudioProjects/Sudoku/app/src/main/res/layout/testactivity.xml" value="0.20863616930312098" />
         <entry key="..\:/AndroidStudioProjects/Sudoku/app/src/main/res/layout/tools_fragment.xml" value="0.2" />
         <entry key="..\:/AndroidStudioProjects/Sudoku/app/src/main/res/layout/win.xml" value="0.20778110303548525" />
+        <entry key="..\:/Users/Julia/Documents/GitHub/Sudoku/app/src/main/res/layout-land/activity_choose.xml" value="0.21535745807590467" />
+        <entry key="..\:/Users/Julia/Documents/GitHub/Sudoku/app/src/main/res/layout-land/activity_end.xml" value="0.21516754850088182" />
+        <entry key="..\:/Users/Julia/Documents/GitHub/Sudoku/app/src/main/res/layout-land/activity_game.xml" value="0.21535745807590467" />
+        <entry key="..\:/Users/Julia/Documents/GitHub/Sudoku/app/src/main/res/layout-land/activity_main.xml" value="0.264" />
+        <entry key="..\:/Users/Julia/Documents/GitHub/Sudoku/app/src/main/res/layout-land/activity_settings.xml" value="0.4" />
+        <entry key="..\:/Users/Julia/Documents/GitHub/Sudoku/app/src/main/res/layout-land/page.xml" value="0.21516754850088182" />
+        <entry key="..\:/Users/Julia/Documents/GitHub/Sudoku/app/src/main/res/layout-land/pause.xml" value="0.21516754850088182" />
+        <entry key="..\:/Users/Julia/Documents/GitHub/Sudoku/app/src/main/res/layout/activity_choose.xml" value="0.20863616930312098" />
+        <entry key="..\:/Users/Julia/Documents/GitHub/Sudoku/app/src/main/res/layout/activity_end.xml" value="0.20863616930312098" />
         <entry key="..\:/Users/Julia/Documents/GitHub/Sudoku/app/src/main/res/layout/activity_game.xml" value="0.20863616930312098" />
+        <entry key="..\:/Users/Julia/Documents/GitHub/Sudoku/app/src/main/res/layout/activity_main.xml" value="0.264" />
         <entry key="..\:/Users/Julia/Documents/GitHub/Sudoku/app/src/main/res/layout/activity_settings.xml" value="0.20863616930312098" />
         <entry key="..\:/Users/Julia/Documents/GitHub/Sudoku/app/src/main/res/layout/header_fragment.xml" value="0.20863616930312098" />
+        <entry key="..\:/Users/Julia/Documents/GitHub/Sudoku/app/src/main/res/layout/page.xml" value="0.20863616930312098" />
+        <entry key="..\:/Users/Julia/Documents/GitHub/Sudoku/app/src/main/res/layout/pause.xml" value="0.20863616930312098" />
+        <entry key="..\:/Users/Julia/Documents/GitHub/Sudoku/app/src/main/res/layout/rules_activity.xml" value="0.20863616930312098" />
       </map>
     </option>
   </component>

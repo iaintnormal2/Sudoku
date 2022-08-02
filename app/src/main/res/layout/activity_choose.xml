@@ -2,8 +2,10 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layout_5"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@drawable/background">
 
     <LinearLayout
         android:layout_width="0dp"
@@ -23,6 +25,7 @@
             android:layout_height="wrap_content"
             android:text="@string/size"
             android:textAlignment="center"
+            android:textColor="@color/white"
             android:textSize="34sp" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -53,6 +56,7 @@
                 android:maxLength="2"
                 android:text="9"
                 android:textAlignment="center"
+                android:textColor="@color/white"
                 android:textSize="24sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/button9"
@@ -80,6 +84,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/level"
+            android:textColor="@color/white"
             android:textSize="34sp" />
 
         <TableLayout
@@ -88,7 +93,7 @@
 
             <TableRow
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" >
+                android:layout_height="match_parent">
 
                 <Button
                     android:id="@+id/button2"
@@ -99,8 +104,8 @@
                     android:insetTop="0dp"
                     android:insetRight="3dp"
                     android:insetBottom="3dp"
-                    android:text="★"
-                    android:textSize="70sp" />
+                    android:text="🤣"
+                    android:textSize="60sp" />
 
                 <Button
                     android:id="@+id/button3"
@@ -111,8 +116,8 @@
                     android:insetTop="0dp"
                     android:insetRight="3dp"
                     android:insetBottom="3dp"
-                    android:text="★★"
-                    android:textSize="34sp" />
+                    android:text="🙂"
+                    android:textSize="60sp" />
 
                 <Button
                     android:id="@+id/button4"
@@ -123,13 +128,13 @@
                     android:insetTop="0dp"
                     android:insetRight="3dp"
                     android:insetBottom="3dp"
-                    android:text="★★★"
-                    android:textSize="20sp" />
+                    android:text="🤨"
+                    android:textSize="60sp" />
             </TableRow>
 
             <TableRow
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" >
+                android:layout_height="match_parent">
 
                 <Button
                     android:id="@+id/button5"
@@ -140,8 +145,8 @@
                     android:insetTop="3dp"
                     android:insetRight="3dp"
                     android:insetBottom="0dp"
-                    android:text="★★\n★★"
-                    android:textSize="34sp" />
+                    android:text="🤔"
+                    android:textSize="60sp" />
 
                 <Button
                     android:id="@+id/button6"
@@ -152,8 +157,8 @@
                     android:insetTop="3dp"
                     android:insetRight="3dp"
                     android:insetBottom="0dp"
-                    android:text="★★★\n★★"
-                    android:textSize="24sp" />
+                    android:text="🤯"
+                    android:textSize="60sp" />
 
             </TableRow>
 

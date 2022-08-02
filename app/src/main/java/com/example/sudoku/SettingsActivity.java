@@ -3,6 +3,7 @@ package com.example.sudoku;
 import static com.example.sudoku.MainActivity.stateOfGame;
 
 import android.annotation.SuppressLint;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -28,6 +29,8 @@ public class SettingsActivity extends AppCompatActivity {
         int[] switches = {R.id.switch1, R.id.switch2, R.id.switch3, R.id.switch4, R.id.switch5,
         R.id.switch6, R.id.switch7, R.id.switch8, R.id.switch9, R.id.switch12};
 
+        int[] switches_for_chars = {R.id.switch13, R.id.switch14, R.id.switch15, R.id.switch16, R.id.switch17};
+
         for(int i = 0; i < 10; i++){
             findViewById(switches[i]).setId(i*10000000);
             ((Switch) findViewById(i*10000000)).setChecked(stateOfGame.settings[i]);
@@ -36,6 +39,32 @@ public class SettingsActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View view) {
                     stateOfGame.settings[view.getId()/10000000] = !stateOfGame.settings[view.getId()/10000000];
+                }
+            });
+        }
+
+        for(int i = 0; i < 5; i++){
+            findViewById(switches_for_chars[i]).setId((i+1)*100000000);
+            if(stateOfGame.chars_mode != i){
+                ((Switch) findViewById((i+1)*100000000)).setChecked(false);
+            }else{
+                ((Switch) findViewById((i+1)*100000000)).setChecked(true);
+            }
+            findViewById((i+1)*100000000).setOnClickListener(new View.OnClickListener() {
+                @SuppressLint("ResourceType")
+                @Override
+                public void onClick(View view) {
+                    if(((Switch) view).isChecked()) {
+                        for (int j = 0; j < 5; j++) {
+                            if (((j + 1) * 100000000) != view.getId()) {
+                                ((Switch) findViewById((j + 1) * 100000000)).setChecked(false);
+                            }
+                        }
+                        stateOfGame.chars_mode = view.getId() / 100000000 - 1;
+                    }else{
+                        ((Switch) findViewById(100000000)).setChecked(true);
+                        stateOfGame.chars_mode = 0;
+                    }
                 }
             });
         }

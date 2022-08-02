@@ -62,8 +62,33 @@ public class GameActivity extends FragmentActivity {
                     }
                 }
             }
+            boolean is_mistake = false;
+
             //если в ячейке правильная цифра, она пустая или подсвечивать ошибки не нужно, подсвечиваем синим
-            if (Arrays.binarySearch(chars, current_cell.getText().toString()) == stateOfGame.cells.field[row][col] || !stateOfGame.settings[2]
+            for (int i = 0; i < max_num; i++) {
+                if (stateOfGame.all_fields.get(stateOfGame.all_fields.size() - 1)[i][col] == stateOfGame.all_fields.get(stateOfGame.all_fields.size() - 1)[row][col] && i != row) {
+                    is_mistake = true;
+                    break;
+                }
+                if (stateOfGame.all_fields.get(stateOfGame.all_fields.size() - 1)[row][i] == stateOfGame.all_fields.get(stateOfGame.all_fields.size() - 1)[row][col] && i != col) {
+                    is_mistake = true;
+                    break;
+                }
+            }
+            if (!is_mistake) {
+                for (int i = (row / stateOfGame.cells.sqrt_2) * stateOfGame.cells.sqrt_2; i < (row / stateOfGame.cells.sqrt_2) * stateOfGame.cells.sqrt_2 + stateOfGame.cells.sqrt_2; i++) {
+                    for (int j = (col / stateOfGame.cells.sqrt) * stateOfGame.cells.sqrt; j < (col / stateOfGame.cells.sqrt) * stateOfGame.cells.sqrt + stateOfGame.cells.sqrt; j++) {
+                        if (i != row && j != col && stateOfGame.all_fields.get(stateOfGame.all_fields.size() - 1)[i][j] == stateOfGame.all_fields.get(stateOfGame.all_fields.size() - 1)[row][col]) {
+                            is_mistake = true;
+                            break;
+                        }
+                    }
+                    if (is_mistake) {
+                        break;
+                    }
+                }
+            }
+            if (!is_mistake || !stateOfGame.settings[2]
                     || stateOfGame.all_fields.get(stateOfGame.all_fields.size()-1)[row][col] <= 0) {
                 current_cell.setBackgroundColor(getResources().getColor(R.color.transparent_light_blue));
             }
@@ -75,7 +100,7 @@ public class GameActivity extends FragmentActivity {
             //если какую-то цифру больше не потребуется ставить, то кнопку, на которой она написана, нужно убрать,
             //а если она сначала закончилась, а теперь снова нужна, тогда наоборот
             for (int i = 0; i < stateOfGame.filled_numbers.length; i++) {
-                if (stateOfGame.filled_numbers[i] == max_num) {
+                if (stateOfGame.filled_numbers[i] >= max_num) {
                     findViewById(buttons[i]).setClickable(false);
                     findViewById(buttons[i]).setVisibility(View.INVISIBLE);
                 } else {
@@ -103,17 +128,9 @@ public class GameActivity extends FragmentActivity {
                 R.id.button_I, R.id.button_J, R.id.button_K, R.id.button_L, R.id.button_M, R.id.button_N,
                 R.id.button_O, R.id.button_P};
 
-        try{
-            if(stateOfGame.settings[10]) {
-                current_button.setTextColor(getResources().getColor(R.color.dark_blue));
-            }
-        }catch(NullPointerException e){
-            current_button = findViewById(buttons[0]);
-            current_button.setTextColor(getResources().getColor(R.color.dark_blue));
-        }
-
         //нужное количество кнопок становится видимым и устанавливается функция, вызываемая при нажатии
         for (int i = 0; i < max_num; i++) {
+            ((Button) findViewById(buttons[i])).setText(chars[stateOfGame.chars_mode][i+1]);
             (findViewById(buttons[i])).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -131,7 +148,7 @@ public class GameActivity extends FragmentActivity {
                                 if (!stateOfGame.note_mode) {
 
                                     //Цифр, которые такие же, как выбранная, становится больше
-                                    stateOfGame.filled_numbers[Arrays.binarySearch(chars, current_button.getText().toString())-1]++;
+                                    stateOfGame.filled_numbers[Arrays.binarySearch(chars[stateOfGame.chars_mode], current_button.getText().toString())-1]++;
 
                                     //Если в ячейке что-то было, этого становится меньше
                                     if (stateOfGame.all_fields.get(stateOfGame.all_fields.size() - 1)[row][col] > 0) {
@@ -148,7 +165,7 @@ public class GameActivity extends FragmentActivity {
                                         }
                                     }
 
-                                    stateOfGame.all_fields.get(stateOfGame.all_fields.size() - 1)[row][col] = Arrays.binarySearch(chars, current_button.getText().toString());
+                                    stateOfGame.all_fields.get(stateOfGame.all_fields.size() - 1)[row][col] = Arrays.binarySearch(chars[stateOfGame.chars_mode], current_button.getText().toString());
 
                                     boolean is_mistake = false;
                                     boolean has_zero = false;
@@ -213,12 +230,12 @@ public class GameActivity extends FragmentActivity {
 
                                     if(stateOfGame.settings[9]) {
                                         for (int i = 0; i < max_num; i++) {
-                                            stateOfGame.all_notes.get(stateOfGame.all_notes.size() - 1)[row][i][Arrays.binarySearch(chars, current_cell.getText().toString())-1] = 0;
-                                            stateOfGame.all_notes.get(stateOfGame.all_notes.size() - 1)[i][col][Arrays.binarySearch(chars, current_cell.getText().toString())-1] = 0;
+                                            stateOfGame.all_notes.get(stateOfGame.all_notes.size() - 1)[row][i][Arrays.binarySearch(chars[stateOfGame.chars_mode], current_cell.getText().toString())-1] = 0;
+                                            stateOfGame.all_notes.get(stateOfGame.all_notes.size() - 1)[i][col][Arrays.binarySearch(chars[stateOfGame.chars_mode], current_cell.getText().toString())-1] = 0;
                                         }
                                         for (int i = (row / stateOfGame.cells.sqrt_2) * stateOfGame.cells.sqrt_2; i < (row / stateOfGame.cells.sqrt_2) * stateOfGame.cells.sqrt_2 + stateOfGame.cells.sqrt_2; i++) {
                                             for (int j = (col / stateOfGame.cells.sqrt) * stateOfGame.cells.sqrt; j < (col / stateOfGame.cells.sqrt) * stateOfGame.cells.sqrt + stateOfGame.cells.sqrt; j++) {
-                                                stateOfGame.all_notes.get(stateOfGame.all_notes.size() - 1)[i][j][Arrays.binarySearch(chars, current_cell.getText().toString())-1] = 0;
+                                                stateOfGame.all_notes.get(stateOfGame.all_notes.size() - 1)[i][j][Arrays.binarySearch(chars[stateOfGame.chars_mode], current_cell.getText().toString())-1] = 0;
                                             }
                                         }
                                     }
@@ -227,7 +244,7 @@ public class GameActivity extends FragmentActivity {
                                         for (int j = 0; j < max_num; j++) {
                                             String new_text = "";
                                             for (int k = 0; k < max_num; k++) {
-                                                new_text += chars[stateOfGame.all_notes.get(stateOfGame.all_notes.size() - 1)[i][j][k]] + "  ";
+                                                new_text += chars[stateOfGame.chars_mode][stateOfGame.all_notes.get(stateOfGame.all_notes.size() - 1)[i][j][k]] + "  ";
                                                 if ((k + 1) % stateOfGame.cells.sqrt_2 == 0) {
                                                     new_text += "\n";
                                                 }
@@ -254,16 +271,16 @@ public class GameActivity extends FragmentActivity {
                                     }
                                     stateOfGame.all_fields.get(stateOfGame.all_fields.size() - 1)[row][col] = -1;
 
-                                    if (stateOfGame.all_notes.get(stateOfGame.all_notes.size() - 1)[row][col][Arrays.binarySearch(chars, current_button.getText().toString())-1] == 0) {
-                                        stateOfGame.all_notes.get(stateOfGame.all_notes.size() - 1)[row][col][Arrays.binarySearch(chars, current_button.getText().toString())-1] = Arrays.binarySearch(chars, current_button.getText().toString());
+                                    if (stateOfGame.all_notes.get(stateOfGame.all_notes.size() - 1)[row][col][Arrays.binarySearch(chars[stateOfGame.chars_mode], current_button.getText().toString())-1] == 0) {
+                                        stateOfGame.all_notes.get(stateOfGame.all_notes.size() - 1)[row][col][Arrays.binarySearch(chars[stateOfGame.chars_mode], current_button.getText().toString())-1] = Arrays.binarySearch(chars[stateOfGame.chars_mode], current_button.getText().toString());
                                     } else {
-                                        stateOfGame.all_notes.get(stateOfGame.all_notes.size() - 1)[row][col][Arrays.binarySearch(chars, current_button.getText().toString())-1] = 0;
+                                        stateOfGame.all_notes.get(stateOfGame.all_notes.size() - 1)[row][col][Arrays.binarySearch(chars[stateOfGame.chars_mode], current_button.getText().toString())-1] = 0;
                                     }
 
                                     for (int i = 0; i < max_num; i++) {
                                         for (int j = 0; j < max_num; j++) {
                                             if (stateOfGame.all_fields.get(stateOfGame.all_fields.size() - 1)[i][j] >= 0) {
-                                                ((TextView) findViewById(R.id.fragmentContainerView).findViewById(i * max_num + j + 626)).setText(chars[stateOfGame.all_fields.get(stateOfGame.all_fields.size() - 1)[i][j]]);
+                                                ((TextView) findViewById(R.id.fragmentContainerView).findViewById(i * max_num + j + 626)).setText(chars[stateOfGame.chars_mode][stateOfGame.all_fields.get(stateOfGame.all_fields.size() - 1)[i][j]]);
                                             } else {
                                                 ((TextView) findViewById(R.id.fragmentContainerView).findViewById(i * max_num + j + 626)).setText("");
                                             }
@@ -274,7 +291,7 @@ public class GameActivity extends FragmentActivity {
                                         for (int j = 0; j < max_num; j++) {
                                             String new_text = "";
                                             for (int k = 0; k < max_num; k++) {
-                                                new_text += chars[stateOfGame.all_notes.get(stateOfGame.all_notes.size() - 1)[i][j][k]] + "  ";
+                                                new_text += chars[stateOfGame.chars_mode][stateOfGame.all_notes.get(stateOfGame.all_notes.size() - 1)[i][j][k]] + "  ";
                                                 if ((k + 1) % stateOfGame.cells.sqrt_2 == 0) {
                                                     new_text += "\n";
                                                 }
@@ -286,11 +303,6 @@ public class GameActivity extends FragmentActivity {
                             }//Если ячейка заполнена с начала игры, менять её нельзя
                             else {
                                 Toast.makeText(getApplicationContext(), R.string.already_filled, Toast.LENGTH_SHORT).show();
-                            }
-                            //Если пользователь правильно поставил все цифры, игра завершается победой
-                            if (Arrays.deepEquals(stateOfGame.all_fields.get(stateOfGame.all_fields.size() - 1), stateOfGame.cells.field)) {
-                                finish_game(getResources().getString(R.string.becauseofsuccess), getResources().getString(R.string.win),
-                                        ((TextView) findViewById(R.id.header).findViewById(R.id.textView3)).getText().toString());
                             }
                         }
                     }else{
@@ -307,6 +319,9 @@ public class GameActivity extends FragmentActivity {
             findViewById(buttons[i]).setVisibility(View.VISIBLE);
         }
 
+        current_button = findViewById(buttons[0]);
+        current_button.setTextColor(getResources().getColor(R.color.dark_blue));
+
         //Кнопка для отмены действия
         FloatingActionButton undo = findViewById(R.id.floatingActionButton4);
         undo.setOnClickListener(new View.OnClickListener() {
@@ -322,30 +337,22 @@ public class GameActivity extends FragmentActivity {
                         for (int j = 0; j < max_num; j++) {
                             if (stateOfGame.all_fields.get(stateOfGame.all_fields.size() - 1)[i][j] >= 0) {
                                 try {
-                                    if(Arrays.binarySearch(chars, ((TextView) findViewById(R.id.fragmentContainerView).findViewById(i * max_num + j + 626)).getText().toString()) > 0){
-                                        stateOfGame.filled_numbers[Arrays.binarySearch(chars, ((TextView) findViewById(R.id.fragmentContainerView).findViewById(i * max_num + j + 626)).getText().toString())-1]--;
+                                    if(Arrays.binarySearch(chars[stateOfGame.chars_mode], ((TextView) findViewById(R.id.fragmentContainerView).findViewById(i * max_num + j + 626)).getText().toString()) > 0){
+                                        stateOfGame.filled_numbers[Arrays.binarySearch(chars[stateOfGame.chars_mode], ((TextView) findViewById(R.id.fragmentContainerView).findViewById(i * max_num + j + 626)).getText().toString())-1]--;
                                     }
                                 }catch(NumberFormatException e){
 
                                 }
-                                ((TextView) findViewById(R.id.fragmentContainerView).findViewById(i * max_num + j + 626)).setText(chars[stateOfGame.all_fields.get(stateOfGame.all_fields.size() - 1)[i][j]]);
+                                ((TextView) findViewById(R.id.fragmentContainerView).findViewById(i * max_num + j + 626)).setText(chars[stateOfGame.chars_mode][stateOfGame.all_fields.get(stateOfGame.all_fields.size() - 1)[i][j]]);
                                 try{
-                                    if(Arrays.binarySearch(chars, ((TextView) findViewById(R.id.fragmentContainerView).findViewById(i * max_num + j + 626)).getText().toString()) > 0) {
-                                        stateOfGame.filled_numbers[Arrays.binarySearch(chars, ((TextView) findViewById(R.id.fragmentContainerView).findViewById(i * max_num + j + 626)).getText().toString()) - 1]++;
+                                    if(Arrays.binarySearch(chars[stateOfGame.chars_mode], ((TextView) findViewById(R.id.fragmentContainerView).findViewById(i * max_num + j + 626)).getText().toString()) > 0) {
+                                        stateOfGame.filled_numbers[Arrays.binarySearch(chars[stateOfGame.chars_mode], ((TextView) findViewById(R.id.fragmentContainerView).findViewById(i * max_num + j + 626)).getText().toString()) - 1]++;
                                     }
                                 }catch(NumberFormatException e){
 
                                 }
                             } else {
                                 ((TextView) findViewById(R.id.fragmentContainerView).findViewById(i * max_num + j + 626)).setText("");
-                            }
-                            if (stateOfGame.all_fields.get(stateOfGame.all_fields.size() - 1)[i][j] != stateOfGame.cells.field[i][j]
-                                    && stateOfGame.all_fields.get(stateOfGame.all_fields.size() - 1)[i][j] > 0) {
-                                stateOfGame.mistakes++;
-                                if (stateOfGame.settings[7] && stateOfGame.mistakes >= stateOfGame.mistakes_limit) {
-                                    finish_game(getResources().getString(R.string.becauseofmistakes), getResources().getString(R.string.gameover),
-                                            ((TextView) findViewById(R.id.header).findViewById(R.id.textView3)).getText().toString());
-                                }
                             }
                         }
                     }
@@ -357,7 +364,7 @@ public class GameActivity extends FragmentActivity {
                         for(int j = 0; j < max_num; j++){
                             String new_text = "";
                             for(int k = 0; k < max_num; k++){
-                                new_text += chars[stateOfGame.all_notes.get(stateOfGame.all_notes.size()-1)[i][j][k]] + "  ";
+                                new_text += chars[stateOfGame.chars_mode][stateOfGame.all_notes.get(stateOfGame.all_notes.size()-1)[i][j][k]] + "  ";
                                 if ((k + 1) % stateOfGame.cells.sqrt_2 == 0) {
                                     new_text += "\n";
                                 }
@@ -480,7 +487,7 @@ public class GameActivity extends FragmentActivity {
                 }
 
                 //Собственно ставим цифру
-                current_cell.setText(chars[stateOfGame.cells.field[row][col]]);
+                current_cell.setText(chars[stateOfGame.chars_mode][stateOfGame.cells.field[row][col]]);
 
                 stateOfGame.all_fields.add(new int[max_num][max_num]);
                 for(int j = 0; j < max_num; j++){
@@ -503,12 +510,12 @@ public class GameActivity extends FragmentActivity {
                 stateOfGame.all_notes.get(stateOfGame.all_notes.size() - 1)[row][col] = new int[max_num];
                 if(stateOfGame.settings[9]) {
                     for (int i = 0; i < max_num; i++) {
-                        stateOfGame.all_notes.get(stateOfGame.all_notes.size() - 1)[row][i][Arrays.binarySearch(chars, current_cell.getText().toString()) - 1] = 0;
-                        stateOfGame.all_notes.get(stateOfGame.all_notes.size() - 1)[i][col][Arrays.binarySearch(chars, current_cell.getText().toString()) - 1] = 0;
+                        stateOfGame.all_notes.get(stateOfGame.all_notes.size() - 1)[row][i][Arrays.binarySearch(chars[stateOfGame.chars_mode], current_cell.getText().toString()) - 1] = 0;
+                        stateOfGame.all_notes.get(stateOfGame.all_notes.size() - 1)[i][col][Arrays.binarySearch(chars[stateOfGame.chars_mode], current_cell.getText().toString()) - 1] = 0;
                     }
                     for (int i = (row / stateOfGame.cells.sqrt_2) * stateOfGame.cells.sqrt_2; i < (row / stateOfGame.cells.sqrt_2) * stateOfGame.cells.sqrt_2 + stateOfGame.cells.sqrt_2; i++) {
                         for (int j = (col / stateOfGame.cells.sqrt) * stateOfGame.cells.sqrt; j < (col / stateOfGame.cells.sqrt) * stateOfGame.cells.sqrt + stateOfGame.cells.sqrt; j++) {
-                            stateOfGame.all_notes.get(stateOfGame.all_notes.size() - 1)[i][j][Arrays.binarySearch(chars, current_cell.getText().toString()) - 1] = 0;
+                            stateOfGame.all_notes.get(stateOfGame.all_notes.size() - 1)[i][j][Arrays.binarySearch(chars[stateOfGame.chars_mode], current_cell.getText().toString()) - 1] = 0;
                         }
                     }
                 }
@@ -519,7 +526,7 @@ public class GameActivity extends FragmentActivity {
                     for(int j = 0; j < max_num; j++){
                         String new_text = "";
                         for(int k = 0; k < max_num; k++){
-                            new_text += chars[stateOfGame.all_notes.get(stateOfGame.all_notes.size() - 1)[i][j][k]]+"  ";
+                            new_text += chars[stateOfGame.chars_mode][stateOfGame.all_notes.get(stateOfGame.all_notes.size() - 1)[i][j][k]]+"  ";
                             if((k+1) % stateOfGame.cells.sqrt_2 == 0){
                                 new_text+="\n";
                             }
@@ -540,16 +547,13 @@ public class GameActivity extends FragmentActivity {
                         break;
                     }
                 }
-                //Если пользователь превысил допустимое количество ошибок, игра завершается его поражением
                 for(int i = 0; i < max_num; i++) {
                     if (stateOfGame.all_fields.get(stateOfGame.all_fields.size() - 1)[i][col] == stateOfGame.all_fields.get(stateOfGame.all_fields.size() - 1)[row][col] && i != row) {
-                        stateOfGame.mistakes++;
                         is_mistake = true;
                         break;
                     }
                     if (stateOfGame.all_fields.get(stateOfGame.all_fields.size() - 1)[row][i] == stateOfGame.all_fields.get(stateOfGame.all_fields.size() - 1)[row][col] && i != col) {
                         is_mistake = true;
-                        stateOfGame.mistakes++;
                         break;
                     }
                 }
@@ -557,7 +561,6 @@ public class GameActivity extends FragmentActivity {
                     for (int i = (row / stateOfGame.cells.sqrt_2) * stateOfGame.cells.sqrt_2; i < (row / stateOfGame.cells.sqrt_2) * stateOfGame.cells.sqrt_2 + stateOfGame.cells.sqrt_2; i++) {
                         for (int j = (col / stateOfGame.cells.sqrt) * stateOfGame.cells.sqrt; j < (col / stateOfGame.cells.sqrt) * stateOfGame.cells.sqrt + stateOfGame.cells.sqrt; j++) {
                             if (i != row && j != col && stateOfGame.all_fields.get(stateOfGame.all_fields.size() - 1)[i][j] == stateOfGame.all_fields.get(stateOfGame.all_fields.size() - 1)[row][col]) {
-                                stateOfGame.mistakes++;
                                 is_mistake = true;
                                 break;
                             }
@@ -571,10 +574,6 @@ public class GameActivity extends FragmentActivity {
                             break;
                         }
                     }
-                }
-                if (Arrays.deepEquals(stateOfGame.all_fields.get(stateOfGame.all_fields.size()-1), stateOfGame.cells.field)) {
-                    finish_game(getResources().getString(R.string.becauseofsuccess), getResources().getString(R.string.win),
-                            ((TextView) findViewById(R.id.header).findViewById(R.id.textView3)).getText().toString());
                 }
                 paint(buttons);
             }
