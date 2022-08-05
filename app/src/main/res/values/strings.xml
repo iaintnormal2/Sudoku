@@ -42,14 +42,14 @@
     <string name="becauseoftime">Time is up</string>
     <string name="becauseofmistakes">Too many mistakes</string>
     <string name="becauseofhints">Too many hints</string>
-    <string name="becauseofsuccess">Great job</string>
+    <string name="becauseofsuccess">Well done</string>
     <string name="retry">Try again</string>
     <string name="save">Save</string>
     <string name="highlighting">⭐️ Highlighting</string>
     <string name="display">📱 Display</string>
     <string name="limits">⛔️ Limits</string>
     <string name="general_rule">Every two numbers in every row,\ncolumn or little square\nare different</string>
-    <string name="neighbours">The absolute value of difference\nof two numbers in cells divided\nby wide border equals 1</string>
+    <string name="neighbours">The absolute value of difference\nof two numbers in cells divided\nwith wide border equals 1</string>
     <string name="oddandeven">The background of cells with\neven number is gray</string>
     <string name="trio">There is a pink circle in the background\nof cells with number, which is less or\nequals 1\/3 of maximal number, yellow\nsquare for number which is more 1\/3 and\n less or equals 2\/3 of it</string>
     <string name="rules">Rules</string>

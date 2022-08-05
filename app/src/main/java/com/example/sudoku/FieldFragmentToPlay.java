@@ -229,7 +229,7 @@ public class FieldFragmentToPlay extends Fragment {
                                                         String new_text = "";
                                                         for (int k = 0; k < max_num; k++) {
                                                             new_text += chars[stateOfGame.chars_mode][stateOfGame.all_notes.get(stateOfGame.all_notes.size() - 1)[i][j][k]] + "  ";
-                                                            if ((k + 1) % stateOfGame.cells.sqrt_2 == 0) {
+                                                            if ((k + 1) % stateOfGame.cells.sqrt == 0) {
                                                                 new_text += "\n";
                                                             }
                                                         }
@@ -276,7 +276,7 @@ public class FieldFragmentToPlay extends Fragment {
                                                         String new_text = "";
                                                         for (int k = 0; k < max_num; k++) {
                                                             new_text += chars[stateOfGame.chars_mode][stateOfGame.all_notes.get(stateOfGame.all_notes.size() - 1)[i][j][k]] + "  ";
-                                                            if ((k + 1) % stateOfGame.cells.sqrt_2 == 0) {
+                                                            if ((k + 1) % stateOfGame.cells.sqrt == 0) {
                                                                 new_text += "\n";
                                                             }
                                                         }

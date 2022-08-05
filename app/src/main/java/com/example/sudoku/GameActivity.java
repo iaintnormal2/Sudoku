@@ -245,7 +245,7 @@ public class GameActivity extends FragmentActivity {
                                             String new_text = "";
                                             for (int k = 0; k < max_num; k++) {
                                                 new_text += chars[stateOfGame.chars_mode][stateOfGame.all_notes.get(stateOfGame.all_notes.size() - 1)[i][j][k]] + "  ";
-                                                if ((k + 1) % stateOfGame.cells.sqrt_2 == 0) {
+                                                if ((k + 1) % stateOfGame.cells.sqrt == 0) {
                                                     new_text += "\n";
                                                 }
                                             }
@@ -292,7 +292,7 @@ public class GameActivity extends FragmentActivity {
                                             String new_text = "";
                                             for (int k = 0; k < max_num; k++) {
                                                 new_text += chars[stateOfGame.chars_mode][stateOfGame.all_notes.get(stateOfGame.all_notes.size() - 1)[i][j][k]] + "  ";
-                                                if ((k + 1) % stateOfGame.cells.sqrt_2 == 0) {
+                                                if ((k + 1) % stateOfGame.cells.sqrt == 0) {
                                                     new_text += "\n";
                                                 }
                                             }
@@ -331,31 +331,22 @@ public class GameActivity extends FragmentActivity {
 
                 if(stateOfGame.all_fields.size() > 1) {
 
-                    stateOfGame.all_fields.remove(stateOfGame.all_fields.size() - 1);
-
                     for (int i = 0; i < max_num; i++) {
                         for (int j = 0; j < max_num; j++) {
-                            if (stateOfGame.all_fields.get(stateOfGame.all_fields.size() - 1)[i][j] >= 0) {
-                                try {
-                                    if(Arrays.binarySearch(chars[stateOfGame.chars_mode], ((TextView) findViewById(R.id.fragmentContainerView).findViewById(i * max_num + j + 626)).getText().toString()) > 0){
-                                        stateOfGame.filled_numbers[Arrays.binarySearch(chars[stateOfGame.chars_mode], ((TextView) findViewById(R.id.fragmentContainerView).findViewById(i * max_num + j + 626)).getText().toString())-1]--;
-                                    }
-                                }catch(NumberFormatException e){
-
-                                }
+                            if(stateOfGame.all_fields.get(stateOfGame.all_fields.size() - 2)[i][j] > 0){
+                                stateOfGame.filled_numbers[stateOfGame.all_fields.get(stateOfGame.all_fields.size() - 2)[i][j]-1]++;
+                            }
+                            if(stateOfGame.all_fields.get(stateOfGame.all_fields.size() - 1)[i][j] > 0){
+                                stateOfGame.filled_numbers[stateOfGame.all_fields.get(stateOfGame.all_fields.size() - 1)[i][j]-1]--;
+                            }
+                            if (stateOfGame.all_fields.get(stateOfGame.all_fields.size() - 2)[i][j] >= 0) {
                                 ((TextView) findViewById(R.id.fragmentContainerView).findViewById(i * max_num + j + 626)).setText(chars[stateOfGame.chars_mode][stateOfGame.all_fields.get(stateOfGame.all_fields.size() - 1)[i][j]]);
-                                try{
-                                    if(Arrays.binarySearch(chars[stateOfGame.chars_mode], ((TextView) findViewById(R.id.fragmentContainerView).findViewById(i * max_num + j + 626)).getText().toString()) > 0) {
-                                        stateOfGame.filled_numbers[Arrays.binarySearch(chars[stateOfGame.chars_mode], ((TextView) findViewById(R.id.fragmentContainerView).findViewById(i * max_num + j + 626)).getText().toString()) - 1]++;
-                                    }
-                                }catch(NumberFormatException e){
-
-                                }
                             } else {
                                 ((TextView) findViewById(R.id.fragmentContainerView).findViewById(i * max_num + j + 626)).setText("");
                             }
                         }
                     }
+                    stateOfGame.all_fields.remove(stateOfGame.all_fields.size() - 1);
                 }
 
                 if(stateOfGame.all_notes.size() > 1){
@@ -365,7 +356,7 @@ public class GameActivity extends FragmentActivity {
                             String new_text = "";
                             for(int k = 0; k < max_num; k++){
                                 new_text += chars[stateOfGame.chars_mode][stateOfGame.all_notes.get(stateOfGame.all_notes.size()-1)[i][j][k]] + "  ";
-                                if ((k + 1) % stateOfGame.cells.sqrt_2 == 0) {
+                                if ((k + 1) % stateOfGame.cells.sqrt == 0) {
                                     new_text += "\n";
                                 }
                             }
@@ -527,7 +518,7 @@ public class GameActivity extends FragmentActivity {
                         String new_text = "";
                         for(int k = 0; k < max_num; k++){
                             new_text += chars[stateOfGame.chars_mode][stateOfGame.all_notes.get(stateOfGame.all_notes.size() - 1)[i][j][k]]+"  ";
-                            if((k+1) % stateOfGame.cells.sqrt_2 == 0){
+                            if((k+1) % stateOfGame.cells.sqrt == 0){
                                 new_text+="\n";
                             }
                         }

@@ -114,7 +114,6 @@ public class HeaderFragment extends Fragment {
     {
         super .onPause();
         stateOfGame.running = false;
-        System.out.println("ok");
     }
 
     //Продолжение осчёта времени
